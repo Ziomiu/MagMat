@@ -2,7 +2,6 @@ package com.example.tutorApp.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -11,8 +10,8 @@ public class QuizAnswer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @ManyToOne
-    @JoinColumn(name = "appuser_id")
-    private AppUser appuser_id;
+    @JoinColumn(name = "appUser_id")
+    private AppUser appUser_id;
 
     private String response;
 

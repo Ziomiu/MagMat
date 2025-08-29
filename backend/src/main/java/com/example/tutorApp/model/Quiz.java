@@ -15,4 +15,12 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<QuizQuestion> questions;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<QuizQuestion> getQuestions() {
+        return questions;
+    }
 }
