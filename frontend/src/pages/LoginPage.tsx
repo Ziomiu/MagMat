@@ -6,14 +6,26 @@ import {
   CardFooter,
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [userEmail, setUserEmail] = useState("adas@dasd");
   const [userPassword, setUserPassword] = useState("adas@dasd");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [ready, setReady] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      navigate("/main");
+    }else{
+      setReady(true);
+    }
+  }, [navigate]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,21 +38,33 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch("", {
+      const response = await fetch("http://localhost:8080/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userEmail, userPassword }),
+        body: JSON.stringify({ email: userEmail, password: userPassword }),
       });
       if (response.ok) {
-        window.location.reload();
+        const userDto: { id: number; email: string; role: string } =
+          await response.json();
+        localStorage.setItem("userId", String(userDto.id));
+        localStorage.setItem("userRole", userDto.role);
+        navigate("/main");
       } else {
-        window.location.reload();
+        const msg = await response.text();
+        setError(msg || `Nieznany błąd (${response.status}).`);
       }
     } catch (e) {
       console.error(e);
       setError("Błąd logowania");
     }
   };
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted">
+        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <Card className="w-full max-w-md">
@@ -75,8 +99,9 @@ function LoginPage() {
                 </button>
               </div>
             </div>
+            <div className="text-sm text-red-700">{error}</div>
           </CardContent>
-          <CardFooter className="flex my-6">
+          <CardFooter className="flex my-3">
             <button
               type="submit"
               className="inline-flex items-center justify-center gap-2  rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"

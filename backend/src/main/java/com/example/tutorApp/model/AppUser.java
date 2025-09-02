@@ -40,4 +40,8 @@ public class AppUser {
     public UserRole getUserRole() {
         return userRole;
     }
+
+    public UUID getId() {
+        return id;
+    }
 }
