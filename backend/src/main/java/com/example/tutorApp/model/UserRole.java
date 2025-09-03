@@ -4,6 +4,5 @@ public enum UserRole {
     ADMIN,
     TEACHER,
     STUDENT,
-    VERIFIED,
     NOT_VERIFIED
 }

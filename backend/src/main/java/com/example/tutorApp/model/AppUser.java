@@ -10,6 +10,7 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+    private String surname;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -18,8 +19,9 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(String name, String email, String password, UserRole userRole) {
+    public AppUser(String name, String surname, String email, String password, UserRole userRole) {
         this.name = name;
+        this.surname = surname;
         this.email = email;
         this.password = password;
         this.userRole = userRole;
@@ -27,6 +29,10 @@ public class AppUser {
 
     public String getName() {
         return name;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     public String getEmail() {
@@ -39,6 +45,10 @@ public class AppUser {
 
     public UserRole getUserRole() {
         return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public UUID getId() {
