@@ -11,8 +11,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const [userEmail, setUserEmail] = useState("adas@dasd");
-  const [userPassword, setUserPassword] = useState("adas@dasd");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
@@ -101,14 +101,27 @@ function LoginPage() {
             </div>
             <div className="text-sm text-red-700">{error}</div>
           </CardContent>
-          <CardFooter className="flex my-3">
+          <CardFooter className="flex flex-col items-center my-3 gap-2">
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2  rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
             >
               Log in
             </button>
+
+            <p className="text-sm text-gray-600">
+              Don’t have an account?{" "}
+              <button
+                type="button"
+                className="text-primary hover:underline hover:cursor-pointer"
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </button>
+            </p>
           </CardFooter>
+
+
         </form>
       </Card>
     </div>
