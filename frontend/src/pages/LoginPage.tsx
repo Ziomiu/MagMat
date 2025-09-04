@@ -21,7 +21,7 @@ function LoginPage() {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
-      navigate("/main");
+      navigate("/");
     }else{
       setReady(true);
     }
@@ -48,7 +48,7 @@ function LoginPage() {
           await response.json();
         localStorage.setItem("userId", String(userDto.id));
         localStorage.setItem("userRole", userDto.role);
-        navigate("/main");
+        navigate("/");
       } else {
         const msg = await response.text();
         setError(msg || `Nieznany błąd (${response.status}).`);
