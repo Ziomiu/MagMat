@@ -3,6 +3,7 @@ package com.example.tutorApp.controller;
 import com.example.tutorApp.errors.*;
 import com.example.tutorApp.model.AppUser;
 import com.example.tutorApp.model.UserDto;
+import com.example.tutorApp.request.ForgotRequest;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.service.UserService;
@@ -78,5 +79,23 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok("Account verified");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ForgotRequest request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+        try {
+            String email = request.email();
+            verificationService.requestPasswordReset(email);
+        } catch (EmailNotFundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok("A reset email has been sent");
     }
 }
