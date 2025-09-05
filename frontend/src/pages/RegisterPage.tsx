@@ -23,7 +23,6 @@ function RegisterPage() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(userEmail, userPassword);
 
     setError("");
     if (!userName || !userSurname || !userEmail || !userPassword) {

@@ -10,7 +10,7 @@ interface NavItem {
   icon: ReactNode;
 }
 const Layout: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const navItems: NavItem[] = [
     { name: "Home", path: "/", icon: <FaHome size={20} /> },
     { name: "Quiz", path: "/quiz", icon: <PiExam size={20} /> },

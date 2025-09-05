@@ -7,6 +7,8 @@ import MainPage from "./pages/MainPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import Layout from "./pages/Layout.tsx";
 import QuizPage from "./pages/QuizPage.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,6 +20,8 @@ createRoot(document.getElementById("root")!).render(
         </Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+        <Route path="/reset-password" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
