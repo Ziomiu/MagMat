@@ -22,7 +22,7 @@ function LoginPage() {
     const userId = localStorage.getItem("userId");
     if (userId) {
       navigate("/");
-    }else{
+    } else {
       setReady(true);
     }
   }, [navigate]);
@@ -102,26 +102,31 @@ function LoginPage() {
             <div className="text-sm text-red-700">{error}</div>
           </CardContent>
           <CardFooter className="flex flex-col items-center my-3 gap-2">
-            <button
-              type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
-            >
-              Log in
-            </button>
-
-            <p className="text-sm text-gray-600">
-              Don’t have an account?{" "}
+            <div className="flex w-full gap-3">
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
+              >
+                Sign in
+              </button>
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
+              >
+                Sign up
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 ">
+              Forgot{" "}
               <button
                 type="button"
                 className="text-primary hover:underline hover:cursor-pointer"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/forgot-password")}
               >
-                Register
+                password?
               </button>
             </p>
           </CardFooter>
-
-
         </form>
       </Card>
     </div>
