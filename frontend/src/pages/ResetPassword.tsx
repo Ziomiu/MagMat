@@ -2,7 +2,7 @@
 const ResetPassword = () => {
   return (
     <div>
-      
+      ResetPage
     </div>
   );
 };

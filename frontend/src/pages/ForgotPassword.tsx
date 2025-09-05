@@ -13,10 +13,12 @@ function ForgotPassword() {
   const [userEmail, setUserEmail] = useState("");
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setDisabled(true);
     setError("");
     if (!userEmail) {
       setError("Wszystkie pola są wymagane.");
@@ -24,11 +26,14 @@ function ForgotPassword() {
     }
 
     try {
-      const response = await fetch("", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/user/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: userEmail }),
+        },
+      );
       if (response.ok) {
         setReady(true);
       } else {
@@ -48,7 +53,7 @@ function ForgotPassword() {
           <CardContent className="flex flex-col gap-4 text-center py-2">
             <p>
               🎉 Email wysłany! Sprawdź swoją skrzynkę mailową, aby zrestować
-              hasło!.
+              hasło!
             </p>
             <button
               className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
@@ -80,7 +85,8 @@ function ForgotPassword() {
                 <div className="flex w-full gap-3">
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
+                    disabled={disabled}
                   >
                     Reset Password
                   </button>
