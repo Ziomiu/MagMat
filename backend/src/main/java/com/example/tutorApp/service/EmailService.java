@@ -5,9 +5,12 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 @Service
+@EnableAsync
 public class EmailService {
     private final JavaMailSender mailSender;
 
@@ -15,6 +18,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    @Async
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);
