@@ -36,11 +36,10 @@ public class VerificationService {
 
 
     public void sendEmailVerificationToken(AppUser user) {
-        String token = UUID.randomUUID().toString();
-        EmailVerificationToken EmailVerificationToken = new EmailVerificationToken(token, user);
-        verificationRepository.save(EmailVerificationToken);
+        EmailVerificationToken emailVerificationToken = new EmailVerificationToken(user);
+        verificationRepository.save(emailVerificationToken);
 
-        String link = apiBaseUrl + "/user/confirm?token=" + token;
+        String link = apiBaseUrl + "/user/confirm?token=" + emailVerificationToken.getToken();
         emailService.sendEmail(user.getEmail(), "Confirm your account", "Click here: " + link);
     }
 
@@ -60,10 +59,9 @@ public class VerificationService {
 
     public void requestPasswordReset(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
-        String token = UUID.randomUUID().toString();
-        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user);
 
-        String link = appBaseUrl + "/reset-password?token=" + token;
+        String link = appBaseUrl + "/reset-password?token=" + passwordResetToken.getToken();
         emailService.sendEmail(email, "Reste your password", "Click here: " + link);
     }
 
