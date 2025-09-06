@@ -57,4 +57,9 @@ public class UserService {
         verificationService.sendEmailVerificationToken(savedUser);
         return savedUser;
     }
+
+    public void changePassword(String password, AppUser user) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }
