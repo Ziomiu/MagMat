@@ -63,9 +63,9 @@ public class VerificationService {
     public void requestPasswordReset(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
         PasswordResetToken passwordResetToken = new PasswordResetToken(user);
-
+        passwordResetTokenRepository.save(passwordResetToken);
         String link = appBaseUrl + "/reset-password?token=" + passwordResetToken.getToken();
-        emailService.sendEmail(email, "Reste your password", "Click here: " + link);
+        emailService.sendEmail(email, "Reset your password", "Click here: " + link);
     }
 
     public AppUser getResetTokenUser(String token) {
