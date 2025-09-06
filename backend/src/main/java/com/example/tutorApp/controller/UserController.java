@@ -3,9 +3,10 @@ package com.example.tutorApp.controller;
 import com.example.tutorApp.errors.*;
 import com.example.tutorApp.model.AppUser;
 import com.example.tutorApp.model.UserDto;
-import com.example.tutorApp.request.ForgotRequest;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
+import com.example.tutorApp.request.ForgotRequest;
+import com.example.tutorApp.request.ResetRequest;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.VerificationService;
 import jakarta.validation.Valid;
@@ -64,8 +65,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            AppUser user = userService.register(request);
-            return ResponseEntity.ok(new UserDto(user));
+            userService.register(request);
+            return ResponseEntity.ok("");
         } catch (EmailInUseException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -97,5 +98,24 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok("A reset email has been sent");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid ResetRequest request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+        try {
+            String token = request.token();
+            AppUser user = verificationService.getResetTokenUser(token);
+            userService.changePassword(request.password(), user);
+        } catch (EmailNotFundException | TokenExpiredException | TokenNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok("Password has been reset");
     }
 }

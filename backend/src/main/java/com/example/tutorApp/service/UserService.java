@@ -7,9 +7,10 @@ import com.example.tutorApp.errors.WrongPasswordException;
 import com.example.tutorApp.model.AppUser;
 import com.example.tutorApp.model.UserRole;
 import com.example.tutorApp.repository.UserRepository;
-import com.example.tutorApp.repository.VerificationRepository;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final VerificationService verificationService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, VerificationService verificationService) {
         this.userRepository = userRepository;
         this.verificationService = verificationService;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public List<AppUser> getUsers() {
@@ -37,7 +40,7 @@ public class UserService {
             throw new AccountNotVerifiedException();
         }
 
-        if (!loginRequest.password().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new WrongPasswordException();
         }
         return user;
@@ -47,10 +50,16 @@ public class UserService {
         if (userRepository.findByEmail(request.email()).isPresent()) {
             throw new EmailInUseException(request.email());
         }
-        AppUser user = new AppUser(request.name(), request.surname(), request.email(), request.password(), UserRole.NOT_VERIFIED);
+        String encodedPassword = passwordEncoder.encode(request.password());
+        AppUser user = new AppUser(request.name(), request.surname(), request.email(), encodedPassword, UserRole.NOT_VERIFIED);
         AppUser savedUser = userRepository.save(user);
 
         verificationService.sendEmailVerificationToken(savedUser);
         return savedUser;
+    }
+
+    public void changePassword(String password, AppUser user) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

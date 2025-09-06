@@ -8,6 +8,7 @@ import com.example.tutorApp.model.AppUser;
 import com.example.tutorApp.model.EmailVerificationToken;
 import com.example.tutorApp.model.PasswordResetToken;
 import com.example.tutorApp.model.UserRole;
+import com.example.tutorApp.repository.PasswordResetTokenRepository;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.repository.VerificationRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 public class VerificationService {
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     @Value("${app.api-url}")
     private String apiBaseUrl;
     @Value("${app.app-url}")
@@ -28,19 +30,19 @@ public class VerificationService {
     private final VerificationRepository verificationRepository;
     private final EmailService emailService;
 
-    public VerificationService(UserRepository userRepository, VerificationRepository verificationRepository, EmailService emailService) {
+    public VerificationService(UserRepository userRepository, VerificationRepository verificationRepository, EmailService emailService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.verificationRepository = verificationRepository;
         this.emailService = emailService;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
 
     public void sendEmailVerificationToken(AppUser user) {
-        String token = UUID.randomUUID().toString();
-        EmailVerificationToken EmailVerificationToken = new EmailVerificationToken(token, user);
-        verificationRepository.save(EmailVerificationToken);
+        EmailVerificationToken emailVerificationToken = new EmailVerificationToken(user);
+        verificationRepository.save(emailVerificationToken);
 
-        String link = apiBaseUrl + "/user/confirm?token=" + token;
+        String link = apiBaseUrl + "/user/confirm?token=" + emailVerificationToken.getToken();
         emailService.sendEmail(user.getEmail(), "Confirm your account", "Click here: " + link);
     }
 
@@ -60,11 +62,18 @@ public class VerificationService {
 
     public void requestPasswordReset(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
-        String token = UUID.randomUUID().toString();
-        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
-
-        String link = appBaseUrl + "/reset-password?token=" + token;
-        emailService.sendEmail(email, "Reste your password", "Click here: " + link);
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user);
+        passwordResetTokenRepository.save(passwordResetToken);
+        String link = appBaseUrl + "/reset-password?token=" + passwordResetToken.getToken();
+        emailService.sendEmail(email, "Reset your password", "Click here: " + link);
     }
 
+    public AppUser getResetTokenUser(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new);
+        if (passwordResetToken.isExpired()) {
+            throw new TokenExpiredException(passwordResetToken.getExpiryDate());
+        }
+        passwordResetTokenRepository.delete(passwordResetToken);
+        return passwordResetToken.getUser();
+    }
 }
