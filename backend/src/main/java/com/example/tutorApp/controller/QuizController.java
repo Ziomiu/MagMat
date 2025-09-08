@@ -25,6 +25,6 @@ public class QuizController {
 
     @GetMapping
     public ResponseEntity<List<Quiz>> getQuizes() {
-        return ResponseEntity.ok(quizService.getQuizes());
+        return ResponseEntity.ok(quizService.getQuizzes());
     }
 }
