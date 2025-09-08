@@ -12,30 +12,17 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     ></div>
   );
 }
+
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("px-6 ", className)}
-      {...props}
-    ></div>
-  );
+  return <div className={cn("px-6 ", className)} {...props}></div>;
 }
+
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("font-semibold py-1", className)}
-      {...props}
-    ></div>
-  );
+  return <div className={cn("font-semibold py-1", className)} {...props}></div>;
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("px-6", className)}
-      {...props}
-    />
-  );
+  return <div className={cn("px-6", className)} {...props} />;
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {

@@ -39,7 +39,7 @@ public class TokenService {
         EmailVerificationToken emailVerificationToken = new EmailVerificationToken(user);
         verificationRepository.save(emailVerificationToken);
 
-        String link = apiBaseUrl + "/user/confirm?token=" + emailVerificationToken.getToken();
+        String link = apiBaseUrl + "/user/confirm-email?token=" + emailVerificationToken.getToken();
         emailService.sendEmail(user.getEmail(), "Confirm your account", "Click here: " + link);
     }
 
@@ -70,7 +70,11 @@ public class TokenService {
         if (passwordResetToken.isExpired()) {
             throw new TokenExpiredException(passwordResetToken.getExpiryDate());
         }
-        passwordResetTokenRepository.delete(passwordResetToken);
         return passwordResetToken.getUser();
+    }
+
+    public void verifyResetToken(String token) {
+        PasswordResetToken passwordResetToken =
+                passwordResetTokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new);
     }
 }

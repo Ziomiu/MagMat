@@ -6,7 +6,7 @@ import {
   CardFooter,
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
@@ -21,7 +21,7 @@ function ForgotPassword() {
     setDisabled(true);
     setError("");
     if (!userEmail) {
-      setError("Wszystkie pola są wymagane.");
+      setError("All fields are required.");
       return;
     }
 
@@ -37,12 +37,13 @@ function ForgotPassword() {
       if (response.ok) {
         setReady(true);
       } else {
+        setDisabled(false);
         const msg = await response.text();
-        setError(msg || `Nieznany błąd (${response.status}).`);
+        setError(msg || `Unknow error (${response.status}).`);
       }
     } catch (e) {
       console.error(e);
-      setError("Błąd logowania");
+      setError("Error while resetting password");
     }
   };
 
@@ -51,15 +52,12 @@ function ForgotPassword() {
       <Card className="w-full max-w-md">
         {ready ? (
           <CardContent className="flex flex-col gap-4 text-center py-2">
-            <p>
-              🎉 Email wysłany! Sprawdź swoją skrzynkę mailową, aby zrestować
-              hasło!
-            </p>
+            <p>🎉 Email has been sent! Check your email to reset password!</p>
             <button
               className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
               onClick={() => navigate("/login")}
             >
-              Powrót do logowania
+              Return to sign in
             </button>
           </CardContent>
         ) : (
@@ -70,11 +68,10 @@ function ForgotPassword() {
               </CardTitle>
             </CardHeader>
             <form onSubmit={onSubmit}>
-              <p className=" px-6 pt-1">Enter account email:</p>
               <CardContent className="flex flex-col gap-2">
                 <Input
                   type="email"
-                  label="Email"
+                  label="Enter account email:"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
                   required={true}
