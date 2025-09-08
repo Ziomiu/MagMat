@@ -4,11 +4,13 @@ import { FaHome } from "react-icons/fa";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from "../components/Sidebar.tsx";
 import { Outlet, useNavigate } from "react-router-dom";
+
 interface NavItem {
   name: string;
   path: string;
   icon: ReactNode;
 }
+
 const Layout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const navItems: NavItem[] = [

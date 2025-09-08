@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -17,7 +17,7 @@ function RegisterPage() {
   const [userPassword, setUserPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false );
+  const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function RegisterPage() {
 
     setError("");
     if (!userName || !userSurname || !userEmail || !userPassword) {
-      setError("Wszystkie pola są wymagane.");
+      setError("All fields are required.");
       return;
     }
     setLoading(true);
@@ -45,12 +45,12 @@ function RegisterPage() {
         setIsRegistered(true);
       } else {
         const msg = await response.text();
-        setError(msg || `Nieznany błąd (${response.status}).`);
+        setError(msg || `Unknown error (${response.status}).`);
       }
     } catch (e) {
       console.error(e);
-      setError("Błąd rejestracji, spróbuj ponownie.");
-    }finally {
+      setError("Error while creating account.");
+    } finally {
       setLoading(false);
     }
   };
@@ -58,20 +58,21 @@ function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">{isRegistered ? "Weryfikacja Email" : "Rejestracja"}</CardTitle>
+          <CardTitle className="text-center text-2xl">
+            {isRegistered ? "Weryfikacja Email" : "Rejestracja"}
+          </CardTitle>
         </CardHeader>
 
         {isRegistered ? (
           <CardContent className="flex flex-col gap-4 text-center">
             <p>
-              🎉 Rejestracja zakończona! Sprawdź swoją skrzynkę mailową, aby
-              zweryfikować konto.
+              🎉 Signing up complete! Check your email to verify the account.
             </p>
             <button
               className="mb-3 inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
               onClick={() => navigate("/login")}
             >
-              Powrót do logowania
+              Return to sign in
             </button>
           </CardContent>
         ) : (
@@ -109,6 +110,7 @@ function RegisterPage() {
                 />
                 <button
                   type="button"
+                  tabIndex={-1}
                   className="absolute right-3 inset-y-0 top-6 text-gray-500"
                   onClick={() => setShowPassword((v) => !v)}
                 >
@@ -124,7 +126,7 @@ function RegisterPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
                 disabled={loading}
               >
-                {loading ? "Rejestracja..." : "Zarejestruj się"}
+                {loading ? "Signing up..." : "Sign up"}
               </button>
             </CardFooter>
           </form>

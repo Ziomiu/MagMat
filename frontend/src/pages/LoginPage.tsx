@@ -29,11 +29,9 @@ function LoginPage() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(userEmail, userPassword);
-
     setError("");
     if (!userEmail || !userPassword) {
-      setError("Wszystkie pola są wymagane.");
+      setError("All fields are required.");
       return;
     }
 
@@ -51,11 +49,11 @@ function LoginPage() {
         navigate("/");
       } else {
         const msg = await response.text();
-        setError(msg || `Nieznany błąd (${response.status}).`);
+        setError(msg || `Unknown error (${response.status}).`);
       }
     } catch (e) {
       console.error(e);
-      setError("Błąd logowania");
+      setError("Error while logging in");
     }
   };
   if (!ready) {
@@ -92,6 +90,7 @@ function LoginPage() {
               <div>
                 <button
                   type="button"
+                  tabIndex={-1}
                   className="absolute right-3 inset-y-0 top-6 text-gray-500"
                   onClick={() => setShowPassword((v) => !v)}
                 >
@@ -110,7 +109,7 @@ function LoginPage() {
                 Sign in
               </button>
               <button
-                type="submit"
+                onClick={() => navigate("/register")}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
               >
                 Sign up
