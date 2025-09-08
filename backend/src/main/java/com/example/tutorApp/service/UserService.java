@@ -1,9 +1,6 @@
 package com.example.tutorApp.service;
 
-import com.example.tutorApp.errors.AccountNotVerifiedException;
-import com.example.tutorApp.errors.EmailInUseException;
-import com.example.tutorApp.errors.EmailNotFundException;
-import com.example.tutorApp.errors.WrongPasswordException;
+import com.example.tutorApp.errors.*;
 import com.example.tutorApp.model.AppUser;
 import com.example.tutorApp.model.UserRole;
 import com.example.tutorApp.repository.UserRepository;
@@ -48,6 +45,9 @@ public class UserService {
     }
 
     public void changePassword(String password, AppUser user) {
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            throw new SameAsOldPasswordException();
+        }
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
