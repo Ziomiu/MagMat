@@ -12,15 +12,12 @@ import com.example.tutorApp.repository.PasswordResetTokenRepository;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.repository.VerificationRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
-public class VerificationService {
+public class TokenService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     @Value("${app.api-url}")
     private String apiBaseUrl;
@@ -30,7 +27,7 @@ public class VerificationService {
     private final VerificationRepository verificationRepository;
     private final EmailService emailService;
 
-    public VerificationService(UserRepository userRepository, VerificationRepository verificationRepository, EmailService emailService, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public TokenService(UserRepository userRepository, VerificationRepository verificationRepository, EmailService emailService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.verificationRepository = verificationRepository;
         this.emailService = emailService;
@@ -46,7 +43,7 @@ public class VerificationService {
         emailService.sendEmail(user.getEmail(), "Confirm your account", "Click here: " + link);
     }
 
-    public void confirmToken(String token) {
+    public void confirmEmailToken(String token) {
         EmailVerificationToken EmailVerificationToken = verificationRepository.findByToken(token)
                 .orElseThrow(TokenNotFoundException::new);
         if (EmailVerificationToken.getUser().getUserRole() == UserRole.NOT_VERIFIED) {
@@ -60,7 +57,7 @@ public class VerificationService {
         }
     }
 
-    public void requestPasswordReset(String email) {
+    public void requestPasswordResetToken(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
         PasswordResetToken passwordResetToken = new PasswordResetToken(user);
         passwordResetTokenRepository.save(passwordResetToken);

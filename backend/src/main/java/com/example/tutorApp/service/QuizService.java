@@ -14,7 +14,7 @@ public class QuizService {
         this.quizRepository = quizRepository;
     }
 
-    public List<Quiz> getQuizes() {
+    public List<Quiz> getQuizzes() {
         return quizRepository.findAll();
     }
 }
