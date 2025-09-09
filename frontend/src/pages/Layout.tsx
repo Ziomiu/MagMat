@@ -38,7 +38,7 @@ const Layout: React.FC = () => {
       </header>
       <div className="flex flex-1">
         <Sidebar isOpen={isOpen} navItems={navItems} />
-        <main className="flex-1 p-6 bg-gray-50 overflow-auto">
+        <main className="flex-1 bg-background overflow-auto">
           <Outlet />
         </main>
       </div>

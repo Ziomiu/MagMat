@@ -17,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<Layout />}>
           <Route index element={<MainPage />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/quiz/:id/edit" element={<QuizPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
