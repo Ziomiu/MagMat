@@ -5,10 +5,7 @@ import com.example.tutorApp.service.QuizService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +21,13 @@ public class QuizController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Quiz>> getQuizes() {
+    public ResponseEntity<List<Quiz>> getQuizzes() {
         return ResponseEntity.ok(quizService.getQuizzes());
+    }
+
+    @PostMapping
+    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
+        quizService.addQuiz(quiz);
+        return ResponseEntity.ok(quiz);
     }
 }
