@@ -19,6 +19,5 @@ export type Quiz = {
   description: string;
   startDate: string;
   endDate: string;
-  targetAudience: string;
   questions: Question[];
 };

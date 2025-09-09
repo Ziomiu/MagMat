@@ -1,11 +1,36 @@
 import QuizList from "../components/quiz/QuizList.tsx";
 import { sampleQuizzes } from "../components/quiz/test-data.ts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Quiz } from "../components/quiz/types.ts";
 
 const QuizPage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/quiz")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch quizzes");
+        }
+        console.log(res);
+        return res.json();
+      })
+      .then((data: Quiz[]) => {
+        console.log(data);
+        setQuizzes(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching quizzes:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <p>Loading quizzes...</p>;
+  }
   return (
     <>
       <div className="flex p-3 justify-between items-center mb-4 border-b">
@@ -17,7 +42,7 @@ const QuizPage = () => {
           Create Quiz
         </Link>
       </div>
-      <QuizList quizzes={sampleQuizzes} setQuizzes={setQuizzes} />
+      <QuizList quizzes={quizzes} setQuizzes={setQuizzes} />
     </>
   );
 };
