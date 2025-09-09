@@ -17,4 +17,8 @@ public class QuizService {
     public List<Quiz> getQuizzes() {
         return quizRepository.findAll();
     }
+
+    public void addQuiz(Quiz quiz) {
+        quizRepository.save(quiz);
+    }
 }

@@ -11,15 +11,15 @@ public class QuizQuestion {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String text;
-
     @Enumerated(EnumType.STRING)
     private QuestionType type;
-    @ElementCollection
-    private List<String> options;
-    @ElementCollection
-    private List<String> correctAnswers;
+
+    private String text;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuizAnswer> answers;
 
     @ManyToOne
+    @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 }
