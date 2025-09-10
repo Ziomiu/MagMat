@@ -9,7 +9,7 @@ type Props = {
 
 function QuizList({ quizzes, setQuizzes }: Props) {
   return (
-    <div className="p-6 ">
+    <div className="p-4 ">
       {quizzes.map((quiz) => (
         <QuizCard key={quiz.id} quiz={quiz} setQuizzes={setQuizzes} />
       ))}
