@@ -9,7 +9,7 @@ type Props = {
 
 function QuizCard({ quiz, setQuizzes }: Props) {
   return (
-    <div className="border rounded p-4 shadow hover:shadow-lg transition">
+    <div className="border rounded m-2 p-4 shadow hover:shadow-lg transition">
       <h2 className="text-xl font-semibold">{quiz.title}</h2>
       <p className="text-gray-500">{quiz.description}</p>
       <p className="mt-2 text-sm text-gray-400">

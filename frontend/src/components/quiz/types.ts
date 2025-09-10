@@ -1,5 +1,5 @@
 export type Answer = {
-  id: number;
+  id?: number;
   text: string;
   correct: boolean;
 };
@@ -7,7 +7,7 @@ export type Answer = {
 export type QuestionType = "single" | "multiple" | "open";
 
 export type Question = {
-  id: number;
+  id?: number;
   type: QuestionType;
   text: string;
   answers?: Answer[];
