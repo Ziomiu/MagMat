@@ -1,8 +1,8 @@
 package com.example.tutorApp.service;
 
 import com.example.tutorApp.errors.*;
-import com.example.tutorApp.model.AppUser;
-import com.example.tutorApp.model.UserRole;
+import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.entity.UserRole;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;

@@ -1,6 +1,6 @@
 package com.example.tutorApp.repository;
 
-import com.example.tutorApp.model.PasswordResetToken;
+import com.example.tutorApp.entity.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

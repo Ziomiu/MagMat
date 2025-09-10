@@ -1,6 +1,7 @@
 package com.example.tutorApp.controller;
 
-import com.example.tutorApp.model.Quiz;
+import com.example.tutorApp.dto.QuizDTO;
+import com.example.tutorApp.entity.Quiz;
 import com.example.tutorApp.service.QuizService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -26,8 +27,8 @@ public class QuizController {
     }
 
     @PostMapping
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        quizService.addQuiz(quiz);
-        return ResponseEntity.ok(quiz);
+    public ResponseEntity<String> createQuiz(@RequestBody QuizDTO quizDTO) {
+        quizService.saveQuizFromDTO(quizDTO);
+        return ResponseEntity.ok("");
     }
 }

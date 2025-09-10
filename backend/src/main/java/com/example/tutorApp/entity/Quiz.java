@@ -1,4 +1,4 @@
-package com.example.tutorApp.model;
+package com.example.tutorApp.entity;
 
 import jakarta.persistence.*;
 
@@ -53,5 +53,29 @@ public class Quiz {
 
     public AppUser getCreatedBy() {
         return createdBy;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setQuestions(List<QuizQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public void setCreatedBy(AppUser createdBy) {
+        this.createdBy = createdBy;
     }
 }

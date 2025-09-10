@@ -1,8 +1,8 @@
 package com.example.tutorApp.service;
 
-import com.example.tutorApp.model.EmailVerificationToken;
-import com.example.tutorApp.model.PasswordResetToken;
-import com.example.tutorApp.model.UserRole;
+import com.example.tutorApp.entity.EmailVerificationToken;
+import com.example.tutorApp.entity.PasswordResetToken;
+import com.example.tutorApp.entity.UserRole;
 import com.example.tutorApp.repository.EmailVerificationTokenRepository;
 import com.example.tutorApp.repository.PasswordResetTokenRepository;
 import com.example.tutorApp.repository.UserRepository;

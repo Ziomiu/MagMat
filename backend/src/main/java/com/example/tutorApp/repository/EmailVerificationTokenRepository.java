@@ -1,6 +1,6 @@
 package com.example.tutorApp.repository;
 
-import com.example.tutorApp.model.EmailVerificationToken;
+import com.example.tutorApp.entity.EmailVerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
