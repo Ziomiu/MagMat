@@ -1,4 +1,7 @@
-package com.example.tutorApp.model;
+package com.example.tutorApp.dto;
+
+import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.entity.UserRole;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.example.tutorApp.model;
+package com.example.tutorApp.entity;
 
 public enum QuestionType {
     SINGLE,

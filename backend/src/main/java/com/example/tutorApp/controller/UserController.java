@@ -1,7 +1,7 @@
 package com.example.tutorApp.controller;
 
-import com.example.tutorApp.model.AppUser;
-import com.example.tutorApp.model.UserDTO;
+import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.dto.UserDTO;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.request.ForgotRequest;

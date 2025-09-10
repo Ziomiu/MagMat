@@ -1,4 +1,4 @@
-package com.example.tutorApp.model;
+package com.example.tutorApp.entity;
 
 import jakarta.persistence.*;
 
@@ -22,4 +22,20 @@ public class UserAnswer {
     private QuizAnswer selectedAnswer;
 
     private String textResponse;
+
+    public AppUser getUser() {
+        return user;
+    }
+
+    public QuizQuestion getQuestion() {
+        return question;
+    }
+
+    public QuizAnswer getSelectedAnswer() {
+        return selectedAnswer;
+    }
+
+    public String getTextResponse() {
+        return textResponse;
+    }
 }

@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
             EmailInUseException.class,
             TokenExpiredException.class,
             TokenNotFoundException.class,
-            SameAsOldPasswordException.class
+            SameAsOldPasswordException.class,
+            UserNotFoundException.class
     })
     public ResponseEntity<String> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
