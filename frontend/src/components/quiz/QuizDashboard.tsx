@@ -1,10 +1,9 @@
-import QuizList from "../components/quiz/QuizList.tsx";
-import { sampleQuizzes } from "../components/quiz/test-data.ts";
+import QuizList from "./QuizList.tsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Quiz } from "../components/quiz/types.ts";
+import type { Quiz } from "./types.ts";
 
-const QuizDashboardPage = () => {
+const QuizDashboard = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,11 +13,9 @@ const QuizDashboardPage = () => {
         if (!res.ok) {
           throw new Error("Failed to fetch quizzes");
         }
-        console.log(res);
         return res.json();
       })
       .then((data: Quiz[]) => {
-        console.log(data);
         setQuizzes(data);
         setLoading(false);
       })
@@ -42,9 +39,9 @@ const QuizDashboardPage = () => {
           Create Quiz
         </Link>
       </div>
-      <QuizList quizzes={sampleQuizzes} setQuizzes={setQuizzes} />
+      <QuizList quizzes={quizzes} setQuizzes={setQuizzes} />
     </>
   );
 };
 
-export default QuizDashboardPage;
+export default QuizDashboard;
