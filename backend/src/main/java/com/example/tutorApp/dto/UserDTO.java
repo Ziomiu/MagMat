@@ -5,24 +5,12 @@ import com.example.tutorApp.entity.UserRole;
 
 import java.util.UUID;
 
-public class UserDTO {
-    private UUID id;
-    private UserRole role;
+public record UserDTO(UUID id,
+                      UserRole role) {
+
 
     public UserDTO(AppUser user) {
-        this.id = user.getId();
-        this.role = user.getUserRole();
+        this(user.getId(), user.getUserRole());
     }
 
-    public UUID getId() { return id; }
-
-    public void setId(UUID id) { this.id = id; }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
 }

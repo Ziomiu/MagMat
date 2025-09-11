@@ -1,21 +1,11 @@
 package com.example.tutorApp.dto;
 
 import java.util.List;
+import java.util.UUID;
 
-public class QuizQuestionDTO {
-    private String text;
-    private String type;
-    private List<QuizAnswerDTO> answers;
+public record QuizQuestionDTO(UUID id,
+                              String text,
+                              String type,
+                              List<QuizAnswerDTO> answers) {
 
-    public String getText() {
-        return text;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public List<QuizAnswerDTO> getAnswers() {
-        return answers;
-    }
 }
