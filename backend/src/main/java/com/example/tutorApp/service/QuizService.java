@@ -2,14 +2,15 @@ package com.example.tutorApp.service;
 
 import com.example.tutorApp.dto.QuizDTO;
 import com.example.tutorApp.entity.*;
+import com.example.tutorApp.errors.QuizNotFound;
 import com.example.tutorApp.errors.UserNotFoundException;
 import com.example.tutorApp.repository.QuizRepository;
 import com.example.tutorApp.repository.UserRepository;
-import org.aspectj.weaver.patterns.TypePatternQuestions;
+import com.example.tutorApp.utils.QuizMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuizService {
@@ -21,42 +22,23 @@ public class QuizService {
         this.userRepository = userRepository;
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizRepository.findAll();
+    public List<QuizDTO> getQuizzes() {
+        return quizRepository.findAll().stream().map(QuizMapper::toQuizDTO).toList();
     }
 
     public void saveQuizFromDTO(QuizDTO quizDTO) {
-        Quiz quiz = new Quiz();
-        quiz.setTitle(quizDTO.getTitle());
-        quiz.setDescription(quizDTO.getDescription());
-        quiz.setStartDate(quizDTO.getStartDate());
-        quiz.setEndDate(quizDTO.getEndDate());
-
-
+        Quiz quiz = QuizMapper.toQuizEntity(quizDTO);
         AppUser appUser =
-                userRepository.findById(quizDTO.getCreatedById()).orElseThrow(UserNotFoundException::new);
+                userRepository.findById(quizDTO.createdById()).orElseThrow(UserNotFoundException::new);
         quiz.setCreatedBy(appUser);
-
-        if (quizDTO.getQuestions() != null) {
-            List<QuizQuestion> questions = quizDTO.getQuestions().stream().map(questionDTO -> {
-                QuizQuestion quizQuestion = new QuizQuestion();
-                quizQuestion.setText(questionDTO.getText());
-                quizQuestion.setType(QuestionType.valueOf(questionDTO.getType().toUpperCase()));
-                quizQuestion.setQuiz(quiz);
-
-                if (questionDTO.getAnswers() != null) {
-                    List<QuizAnswer> answers = questionDTO.getAnswers().stream().map(answerDTO -> {
-                        QuizAnswer quizAnswer = new QuizAnswer();
-                        quizAnswer.setText(answerDTO.getText());
-                        quizAnswer.setCorrect(answerDTO.isCorrect());
-                        quizAnswer.setQuestion(quizQuestion);
-                        return quizAnswer;
-                    }).toList();
-                }
-                return quizQuestion;
-            }).toList();
-            quiz.setQuestions(questions);
-        }
         quizRepository.save(quiz);
+    }
+
+    public Quiz getQuizById(UUID id) {
+        return quizRepository.findById(id).orElseThrow(QuizNotFound::new);
+    }
+    public void deleteQuizById(UUID id) {
+        quizRepository.findById(id).orElseThrow(QuizNotFound::new);
+        quizRepository.deleteById(id);
     }
 }

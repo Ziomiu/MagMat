@@ -23,6 +23,10 @@ public class QuizQuestion {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
+    public UUID getId() {
+        return id;
+    }
+
     public QuestionType getType() {
         return type;
     }

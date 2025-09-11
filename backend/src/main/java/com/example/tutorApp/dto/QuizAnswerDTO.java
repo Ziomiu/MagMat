@@ -1,14 +1,9 @@
 package com.example.tutorApp.dto;
 
-public class QuizAnswerDTO {
-    private String text;
-    private boolean correct;
+import java.util.UUID;
 
-    public boolean isCorrect() {
-        return correct;
-    }
+public record QuizAnswerDTO(UUID id,
+                            String text,
+                            boolean correct) {
 
-    public String getText() {
-        return text;
-    }
 }

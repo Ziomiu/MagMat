@@ -11,26 +11,34 @@ public class QuizAnswer {
     private UUID id;
 
     private String text;
-    private Boolean correct;
+    private Boolean isCorrect;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
     private QuizQuestion question;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getText() {
         return text;
     }
 
-    public Boolean getCorrect() {
-        return correct;
+    public Boolean getIsCorrect() {
+        return isCorrect;
     }
 
     public QuizQuestion getQuestion() {
         return question;
     }
 
-    public void setCorrect(Boolean correct) {
-        this.correct = correct;
+    public void setIsCorrect(Boolean correct) {
+        this.isCorrect = correct;
     }
 
     public void setText(String text) {
