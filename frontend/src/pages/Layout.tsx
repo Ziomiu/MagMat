@@ -36,7 +36,7 @@ const Layout: React.FC = () => {
         <h1 className="text-lg font-bold">Tutor App</h1>
         <div>Account</div>
       </header>
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar isOpen={isOpen} navItems={navItems} />
         <main className="flex-1 bg-background overflow-auto">
           <Outlet />

@@ -1,13 +1,13 @@
 import Input from "../ui/Input.tsx";
 import { useEffect, useState } from "react";
-import type { Quiz } from "./types.ts";
+import type { Question, Quiz } from "./types.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import QuestionForm from "../question/QuestionForm.tsx";
+import QuestionForm from "./question/QuestionForm.tsx";
 
 function QuizForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string[]>([]);
   const [quiz, setQuiz] = useState<Quiz>({
     title: "",
     description: "",
@@ -16,6 +16,36 @@ function QuizForm() {
     questions: [],
     createdById: "",
   });
+
+  const validateQuiz = (): boolean => {
+    const errs: string[] = [];
+
+    if (quiz.questions.length === 0)
+      errs.push("Quiz must have at least one question");
+    if (new Date(quiz.startDate) >= new Date(quiz.endDate))
+      errs.push("Start date must be before end date");
+
+    quiz.questions.forEach((q, idx) => {
+      if (!q.text.trim()) errs.push(`Question ${idx + 1}: text is required`);
+      if (q.type === "single") {
+        if (q.answers.length < 4)
+          errs.push(`Question ${idx + 1}: needs at least 4 answers`);
+        const correctCount = q.answers.filter((a) => a.correct).length;
+        if (correctCount !== 1)
+          errs.push(`Question ${idx + 1}: must have exactly 1 correct answer`);
+      }
+      if (q.type === "multiple") {
+        if (q.answers.length < 4)
+          errs.push(`Question ${idx + 1}: needs at least 4 answers`);
+        const correctCount = q.answers.filter((a) => a.correct).length;
+        if (correctCount < 1)
+          errs.push(`Question ${idx + 1}: must have at least 1 correct answer`);
+      }
+    });
+    setError(errs);
+    return errs.length === 0;
+  };
+
   useEffect(() => {
     console.log(id);
     if (id) {
@@ -28,6 +58,8 @@ function QuizForm() {
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(validateQuiz());
+    if (!validateQuiz()) return;
     const method = id ? "PUT" : "POST";
     const url = id
       ? `http://localhost:8080/quiz/${id}`
@@ -43,20 +75,47 @@ function QuizForm() {
         body: JSON.stringify(quiz),
       });
       if (response.ok) {
-        navigate("/quiz");
+        // navigate("/quiz");
+        console.log(validateQuiz());
       } else {
         const msg = await response.text();
-        setError(msg || `Unknown error (${response.status}).`);
+        setError([msg || `Unknown error (${response.status}).`]);
       }
     } catch (e) {
       console.error(e);
-      setError("Error while saving quiz");
+      setError(["Error while saving quiz"]);
     }
+  };
+  const addQuestion = () => {
+    const newQuestion: Question = {
+      id: crypto.randomUUID(),
+      type: "single",
+      text: "",
+      answers: [],
+    };
+    setQuiz((prev) => ({
+      ...prev,
+      questions: [...prev.questions, newQuestion],
+    }));
+  };
+
+  const updateQuestion = (updated: Question) => {
+    setQuiz((prev) => ({
+      ...prev,
+      questions: prev.questions.map((q) => (q.id === updated.id ? updated : q)),
+    }));
+  };
+
+  const deleteQuestion = (qid: string) => {
+    setQuiz((prev) => ({
+      ...prev,
+      questions: prev.questions.filter((q) => q.id !== qid),
+    }));
   };
 
   return (
     <div>
-      <h1></h1>
+      <h1 className="pl-6 pt-3">Create Quiz</h1>
       <form onSubmit={handleSave}>
         <div className="p-6">
           <Input
@@ -94,8 +153,33 @@ function QuizForm() {
             required
           />
         </div>
-
-        <div className="text-sm text-red-700">{error}</div>
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold mb-2">Questions</h2>
+          {quiz.questions.map((q) => (
+            <QuestionForm
+              key={q.id}
+              question={q}
+              updateQuestion={updateQuestion}
+              deleteQuestion={deleteQuestion}
+            />
+          ))}
+          <button
+            type="button"
+            onClick={addQuestion}
+            className="mt-2 bg-green-500 px-4 py-2 rounded text-white"
+          >
+            Add Question
+          </button>
+        </div>
+        {error.length > 0 && (
+          <div className="bg-red-100 text-red-700 p-3 rounded">
+            <ul className="list-disc pl-5">
+              {error.map((e, i) => (
+                <li key={i}>{e}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <button
           type="submit"
           className="bg-blue-500 px-6 py-2 rounded text-white"
@@ -103,7 +187,6 @@ function QuizForm() {
           Save Quiz
         </button>
       </form>
-      <QuestionForm />
       <div className="flex items-center justify-between w-full">
         <button
           className="text-sm bg-foreground text-background rounded-xl py-2 px-4 gap-2 mt-2"
