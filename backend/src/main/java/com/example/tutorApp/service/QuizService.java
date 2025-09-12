@@ -41,4 +41,10 @@ public class QuizService {
         quizRepository.findById(id).orElseThrow(QuizNotFound::new);
         quizRepository.deleteById(id);
     }
+    public void updateQuizById(UUID id , QuizDTO quizDTO) {
+        quizRepository.findById(id).orElseThrow(QuizNotFound::new);
+        Quiz newQuiz = QuizMapper.toQuizEntity(quizDTO);
+        newQuiz.setId(id);
+        quizRepository.save(newQuiz);
+    }
 }

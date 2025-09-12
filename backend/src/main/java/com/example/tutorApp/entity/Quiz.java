@@ -55,6 +55,10 @@ public class Quiz {
         return createdBy;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

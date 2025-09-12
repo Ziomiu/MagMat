@@ -1,16 +1,16 @@
 export type Answer = {
-  id?: string;
+  id: string;
   text: string;
   correct: boolean;
 };
 
-export type QuestionType = "single" | "multiple" | "open";
+export type QuestionType = "SINGLE" | "MULTIPLE" | "OPEN";
 
 export type Question = {
-  id?: string;
+  id: string;
   type: QuestionType;
   text: string;
-  answers?: Answer[];
+  answers: Answer[];
 };
 
 export type Quiz = {

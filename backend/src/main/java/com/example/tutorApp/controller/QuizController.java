@@ -44,4 +44,9 @@ public class QuizController {
         quizService.deleteQuizById(id);
         return ResponseEntity.ok("");
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateQuizById(@PathVariable UUID id,@RequestBody QuizDTO quizDTO) {
+        quizService.updateQuizById(id, quizDTO);
+        return ResponseEntity.ok("");
+    }
 }
