@@ -20,7 +20,7 @@ public class Quiz {
 
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<QuizQuestion> questions;
 
     @ManyToOne

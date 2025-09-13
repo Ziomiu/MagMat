@@ -1,9 +1,8 @@
 package com.example.tutorApp.controller;
 
 import com.example.tutorApp.dto.QuizDTO;
-import com.example.tutorApp.entity.Quiz;
 import com.example.tutorApp.service.QuizService;
-import com.example.tutorApp.utils.QuizMapper;
+import com.example.tutorApp.utils.QuizUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class QuizController {
 
     @GetMapping("/{id}")
     public ResponseEntity<QuizDTO> getQuizById(@PathVariable UUID id) {
-        return ResponseEntity.ok(QuizMapper.toQuizDTO(quizService.getQuizById(id)));
+        return ResponseEntity.ok(QuizUtils.toQuizDTO(quizService.getQuizById(id)));
     }
 
     @DeleteMapping("/{id}")

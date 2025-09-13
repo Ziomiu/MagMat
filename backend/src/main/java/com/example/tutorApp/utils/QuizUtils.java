@@ -9,10 +9,29 @@ import com.example.tutorApp.entity.QuizAnswer;
 import com.example.tutorApp.entity.QuizQuestion;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public final class QuizMapper {
-    private QuizMapper() {
+public final class QuizUtils {
+    private QuizUtils() {
 
+    }
+
+    public static void updateQuiz(Quiz quiz, QuizDTO quizDTO) {
+        quiz.setTitle(quizDTO.title());
+        quiz.setDescription(quizDTO.description());
+        quiz.setStartDate(quizDTO.startDate());
+        quiz.setEndDate(quizDTO.endDate());
+        if (quizDTO.questions() != null) {
+            List<QuizQuestion> questions = quizDTO.questions().stream()
+                    .map(quizQuestionDTO -> {
+                        QuizQuestion quizQuestion = toQuestionEntity(quizQuestionDTO);
+                        quizQuestion.setQuiz(quiz);
+                        return quizQuestion;
+                    })
+                    .toList();
+            quiz.getQuestions().clear();
+            quiz.getQuestions().addAll(questions);
+        }
     }
 
     public static Quiz toQuizEntity(QuizDTO quizDTO) {
@@ -64,7 +83,7 @@ public final class QuizMapper {
         List<QuizQuestionDTO> questionDTOs = null;
         if (quiz.getQuestions() != null) {
             questionDTOs = quiz.getQuestions().stream()
-                    .map(QuizMapper::toQuestionDTO)
+                    .map(QuizUtils::toQuestionDTO)
                     .toList();
         }
 
@@ -84,7 +103,7 @@ public final class QuizMapper {
         List<QuizAnswerDTO> answerDTOs = null;
         if (quizQuestion.getAnswers() != null) {
             answerDTOs = quizQuestion.getAnswers().stream()
-                    .map(QuizMapper::toQuizAnswerDTO)
+                    .map(QuizUtils::toQuizAnswerDTO)
                     .toList();
         }
 

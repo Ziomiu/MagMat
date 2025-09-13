@@ -6,7 +6,7 @@ import com.example.tutorApp.errors.QuizNotFound;
 import com.example.tutorApp.errors.UserNotFoundException;
 import com.example.tutorApp.repository.QuizRepository;
 import com.example.tutorApp.repository.UserRepository;
-import com.example.tutorApp.utils.QuizMapper;
+import com.example.tutorApp.utils.QuizUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +23,11 @@ public class QuizService {
     }
 
     public List<QuizDTO> getQuizzes() {
-        return quizRepository.findAll().stream().map(QuizMapper::toQuizDTO).toList();
+        return quizRepository.findAll().stream().map(QuizUtils::toQuizDTO).toList();
     }
 
     public void saveQuizFromDTO(QuizDTO quizDTO) {
-        Quiz quiz = QuizMapper.toQuizEntity(quizDTO);
+        Quiz quiz = QuizUtils.toQuizEntity(quizDTO);
         AppUser appUser =
                 userRepository.findById(quizDTO.createdById()).orElseThrow(UserNotFoundException::new);
         quiz.setCreatedBy(appUser);
@@ -42,9 +42,8 @@ public class QuizService {
         quizRepository.deleteById(id);
     }
     public void updateQuizById(UUID id , QuizDTO quizDTO) {
-        quizRepository.findById(id).orElseThrow(QuizNotFound::new);
-        Quiz newQuiz = QuizMapper.toQuizEntity(quizDTO);
-        newQuiz.setId(id);
-        quizRepository.save(newQuiz);
+        Quiz quiz  = quizRepository.findById(id).orElseThrow(QuizNotFound::new);
+        QuizUtils.updateQuiz(quiz, quizDTO);
+        quizRepository.save(quiz);
     }
 }

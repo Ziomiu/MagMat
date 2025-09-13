@@ -31,7 +31,11 @@ function AnswerList({
           questionId={questionId}
         />
       ))}
-      <button type="button" onClick={addAnswer}>
+      <button
+        type="button"
+        onClick={addAnswer}
+        className="bg-green-500 px-2 py-1 rounded-xl hover:bg-green-500/90 flex"
+      >
         Add Answer
       </button>
     </div>
