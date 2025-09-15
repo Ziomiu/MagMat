@@ -8,10 +8,12 @@ import com.example.tutorApp.request.ForgotRequest;
 import com.example.tutorApp.request.ResetRequest;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.TokenService;
+import com.example.tutorApp.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,18 +23,20 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
+    private final JwtUtil jwtUtil;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserService userService, TokenService tokenService) {
+    public UserController(UserService userService, TokenService tokenService,JwtUtil jwtUtil) {
         this.userService = userService;
         this.tokenService = tokenService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         logger.debug("Attempting to log in user: {}", loginRequest);
         AppUser user = userService.loginUser(loginRequest);
-        return ResponseEntity.ok(new UserDTO(user));
+        return ResponseEntity.ok(jwtUtil.generateToken(user.getEmail(),user.getUserRole().name()));
     }
 
     @PostMapping("/register")
