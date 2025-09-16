@@ -15,6 +15,7 @@ function QuizCard({ quiz, setQuizzes }: Props) {
     try {
       const response = await fetch(`http://localhost:8080/quiz/${quiz.id}`, {
         method: "DELETE",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       if (response.ok) {
         setQuizzes((prev) => prev.filter((q) => q.id !== quiz.id));
