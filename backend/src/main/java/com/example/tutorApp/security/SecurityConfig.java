@@ -41,7 +41,16 @@ public class SecurityConfig {
                         .frameOptions(frame -> frame.sameOrigin())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/register").permitAll()
+                        .requestMatchers(
+                                "user/login",
+                                "user/register",
+                                "user/forgot-password",
+                                "user/reset-password"
+                        ).permitAll()
+                        .requestMatchers(
+                                "token/verify-reset",
+                                "token/confirm-email"
+                        ).permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
@@ -49,6 +58,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml"
                         ).permitAll()
+                        .requestMatchers("quiz").hasAnyRole("ADMIN","TEACHER","STUDENT")
+                        .requestMatchers("quiz/user/").hasAnyRole("ADMIN","TEACHER","STUDENT")
+                        .requestMatchers("quiz/").hasAnyRole("ADMIN","TEACHER","STUDENT")
                         .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class)

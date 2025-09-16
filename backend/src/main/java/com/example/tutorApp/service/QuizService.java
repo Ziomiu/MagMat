@@ -22,8 +22,9 @@ public class QuizService {
         this.userRepository = userRepository;
     }
 
-    public List<QuizDTO> getQuizzes() {
-        return quizRepository.findAll().stream().map(QuizUtils::toQuizDTO).toList();
+    public List<QuizDTO> getQuizByCreatedById(UUID id) {
+        AppUser user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return quizRepository.findQuizByCreatedBy(user).stream().map(QuizUtils::toQuizDTO).toList();
     }
 
     public void saveQuizFromDTO(QuizDTO quizDTO) {
@@ -37,12 +38,14 @@ public class QuizService {
     public Quiz getQuizById(UUID id) {
         return quizRepository.findById(id).orElseThrow(QuizNotFound::new);
     }
+
     public void deleteQuizById(UUID id) {
         quizRepository.findById(id).orElseThrow(QuizNotFound::new);
         quizRepository.deleteById(id);
     }
-    public void updateQuizById(UUID id , QuizDTO quizDTO) {
-        Quiz quiz  = quizRepository.findById(id).orElseThrow(QuizNotFound::new);
+
+    public void updateQuizById(UUID id, QuizDTO quizDTO) {
+        Quiz quiz = quizRepository.findById(id).orElseThrow(QuizNotFound::new);
         QuizUtils.updateQuiz(quiz, quizDTO);
         quizRepository.save(quiz);
     }

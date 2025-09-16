@@ -46,13 +46,6 @@ public class UserController {
         return ResponseEntity.ok("Account registered");
     }
 
-    @GetMapping("/confirm-email")
-    public ResponseEntity<String> confirm(@RequestParam String token) {
-        logger.debug("Attempting to confirm email with token: {}", token);
-        tokenService.confirmEmailToken(token);
-        return ResponseEntity.ok("Account verified");
-    }
-
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotRequest forgotRequest) {
         logger.debug("Attempting to prepare password reset: {}", forgotRequest);
