@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
+import { useAuth } from "../context/UseAuth.tsx";
 
 interface NavItem {
   name: string;
@@ -14,12 +15,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems }) => {
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userRole");
-    navigate("/login");
-  };
+  const { logout } = useAuth();
+
   return (
     <aside
       className={`bg-white border-r shadow-md transition-all duration-300 ease-in-out
@@ -46,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems }) => {
       </div>
       <div className="border-t p-2">
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className="w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition"
         >
           <CiLogout className="size-5" />

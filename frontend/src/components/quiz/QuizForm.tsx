@@ -52,7 +52,9 @@ function QuizForm() {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/quiz/${id}`)
+      fetch(`http://localhost:8080/quiz/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
         .then((res) => res.json())
         .then((data: Quiz) => setQuiz(data))
         .then(() => setLoading(false))
@@ -78,11 +80,14 @@ function QuizForm() {
       }
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify(quiz),
       });
       if (response.ok) {
-        // navigate("/quiz");
+        navigate("/quiz");
       } else {
         const msg = await response.text();
         setError([msg || `Unknown error (${response.status}).`]);

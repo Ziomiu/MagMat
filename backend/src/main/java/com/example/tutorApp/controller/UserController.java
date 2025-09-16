@@ -6,6 +6,7 @@ import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.request.ForgotRequest;
 import com.example.tutorApp.request.ResetRequest;
+import com.example.tutorApp.response.LoginResponse;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.TokenService;
 import com.example.tutorApp.utils.JwtUtil;
@@ -33,10 +34,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         logger.debug("Attempting to log in user: {}", loginRequest);
         AppUser user = userService.loginUser(loginRequest);
-        return ResponseEntity.ok(jwtUtil.generateToken(user.getId().toString(), user.getUserRole().name()));
+        LoginResponse loginResponse = new LoginResponse(jwtUtil.generateToken(user.getId().toString(),
+                user.getUserRole().name()));
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/register")

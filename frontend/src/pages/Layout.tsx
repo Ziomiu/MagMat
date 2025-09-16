@@ -4,6 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from "../components/Sidebar.tsx";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/UseAuth.tsx";
 
 interface NavItem {
   name: string;
@@ -13,10 +14,23 @@ interface NavItem {
 
 const Layout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const navItems: NavItem[] = [
-    { name: "Home", path: "/", icon: <FaHome size={20} /> },
-    { name: "Quiz", path: "/quiz", icon: <PiExam size={20} /> },
+  const { role } = useAuth();
+  const commonNav = [{ name: "Home", path: "/", icon: <FaHome size={20} /> }];
+
+  const studentNav = [
+    { name: "Quizzes", path: "/quiz", icon: <PiExam size={20} /> },
   ];
+
+  const teacherNav = [
+    { name: "Quiz Dashboard", path: "/quiz", icon: <PiExam size={20} /> },
+    { name: "Create Quiz", path: "/quiz/create", icon: <PiExam size={20} /> },
+  ];
+
+  const navItems: NavItem[] =
+    role === "TEACHER"
+      ? [...commonNav, ...teacherNav]
+      : [...commonNav, ...studentNav];
+
   const navigate = useNavigate();
   useEffect(() => {
     const userId = localStorage.getItem("userId");

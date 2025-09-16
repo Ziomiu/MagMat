@@ -8,7 +8,12 @@ const QuizDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8080/quiz")
+    fetch(
+      `http://localhost:8080/quiz/user/08a52a3a-6a3c-4936-b028-5869f1d1e1da`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      },
+    )
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch quizzes");

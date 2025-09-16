@@ -9,8 +9,10 @@ import Input from "../components/ui/Input.tsx";
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/UseAuth.tsx";
 
 function LoginPage() {
+  const { login } = useAuth();
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,11 +44,9 @@ function LoginPage() {
         body: JSON.stringify({ email: userEmail, password: userPassword }),
       });
       if (response.ok) {
-        const userDto: { id: number; email: string; role: string } =
-          await response.json();
-        localStorage.setItem("userId", String(userDto.id));
-        localStorage.setItem("userRole", userDto.role);
-        navigate("/");
+        const data: { token: string } = await response.json();
+        console.log(data);
+        login(data.token);
       } else {
         const msg = await response.text();
         setError(msg || `Unknown error (${response.status}).`);
