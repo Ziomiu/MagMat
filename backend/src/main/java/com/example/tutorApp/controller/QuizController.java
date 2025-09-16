@@ -22,9 +22,9 @@ public class QuizController {
         this.quizService = quizService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<QuizDTO>> getQuizzes() {
-        return ResponseEntity.ok(quizService.getQuizzes());
+    @GetMapping("user/{id}")
+    public ResponseEntity<List<QuizDTO>> getQuizByCreatedById(@PathVariable UUID id) {
+        return ResponseEntity.ok(quizService.getQuizByCreatedById(id));
     }
 
     @PostMapping
@@ -43,8 +43,9 @@ public class QuizController {
         quizService.deleteQuizById(id);
         return ResponseEntity.ok("");
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateQuizById(@PathVariable UUID id,@RequestBody QuizDTO quizDTO) {
+    public ResponseEntity<String> updateQuizById(@PathVariable UUID id, @RequestBody QuizDTO quizDTO) {
         quizService.updateQuizById(id, quizDTO);
         return ResponseEntity.ok("");
     }

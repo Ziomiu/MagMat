@@ -26,7 +26,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserService userService, TokenService tokenService,JwtUtil jwtUtil) {
+    public UserController(UserService userService, TokenService tokenService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.jwtUtil = jwtUtil;
@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         logger.debug("Attempting to log in user: {}", loginRequest);
         AppUser user = userService.loginUser(loginRequest);
-        return ResponseEntity.ok(jwtUtil.generateToken(user.getEmail(),user.getUserRole().name()));
+        return ResponseEntity.ok(jwtUtil.generateToken(user.getId().toString(), user.getUserRole().name()));
     }
 
     @PostMapping("/register")
@@ -44,13 +44,6 @@ public class UserController {
         logger.debug("Attempting to register user: {}", registerRequest);
         userService.registerUser(registerRequest);
         return ResponseEntity.ok("Account registered");
-    }
-
-    @GetMapping("/confirm-email")
-    public ResponseEntity<String> confirm(@RequestParam String token) {
-        logger.debug("Attempting to confirm email with token: {}", token);
-        tokenService.confirmEmailToken(token);
-        return ResponseEntity.ok("Account verified");
     }
 
     @PostMapping("/forgot-password")
