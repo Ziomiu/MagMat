@@ -2,33 +2,28 @@ import QuizList from "./QuizList.tsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Quiz } from "./types.ts";
+import { useAuth } from "../../context/UseAuth.tsx";
+import { api } from "../../libs/api.ts";
 
 const QuizDashboard = () => {
+  const { userId } = useAuth();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      `http://localhost:8080/quiz/user/08a52a3a-6a3c-4936-b028-5869f1d1e1da`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      },
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch quizzes");
-        }
-        return res.json();
-      })
-      .then((data: Quiz[]) => {
-        setQuizzes(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+    const fetchQuizzes = async () => {
+      try {
+        const res = await api.get<Quiz[]>(`/quiz/user/${userId}`);
+        setQuizzes(res.data);
+      } catch (error) {
         console.error("Error fetching quizzes:", error);
+      } finally {
         setLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchQuizzes();
+  }, [userId]);
 
   if (loading) {
     return;

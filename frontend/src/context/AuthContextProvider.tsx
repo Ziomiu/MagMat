@@ -1,52 +1,63 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { decodeJwt, isTokenExpired } from "../libs/jwt";
+import { decodeJwt } from "../libs/jwt";
 import { AuthContext } from "./AuthContext";
+import { setAccessToken } from "../libs/api";
+import { publicApi } from "../libs/api";
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
 
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token"),
-  );
-  const [userId, setUserId] = useState<string | null>(
-    localStorage.getItem("userId"),
-  );
-  const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    const tryRefresh = async () => {
+      try {
+        const res = await publicApi.post(
+          "/user/refresh",
+          {},
+          { withCredentials: true },
+        );
 
-  // useEffect(() => {
-  //   if (token && isTokenExpired(token)) {
-  //     logout();
-  //   }
-  // }, [token]);
+        const data: { token: string } = res.data;
+        login(data.token);
+      } catch (err) {
+        console.log("No valid refresh token, staying logged out");
+      }
+    };
 
-  const login = (jwt: string) => {
-    const decoded = decodeJwt(jwt);
+    tryRefresh();
+  }, []);
+
+  const login = (accessToken: string) => {
+    const decoded = decodeJwt(accessToken);
     if (!decoded) return;
 
-    const userId = decoded.sub;
-    const role = decoded.role;
-
-    localStorage.setItem("token", jwt);
-    localStorage.setItem("userId", userId);
-    localStorage.setItem("role", role);
-
-    setToken(jwt);
-    setUserId(userId);
-    setRole(role);
+    setAccessToken(accessToken);
+    setUserId(decoded.sub);
+    setRole(decoded.role);
+    setIsAuthenticated(true);
 
     navigate("/");
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
+  const logout = async () => {
+    try {
+      await fetch("http://localhost:8080/user/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (e) {
+      console.error("Logout error", e);
+    }
 
-    setToken(null);
+    setAccessToken(null);
     setUserId(null);
     setRole(null);
+    setIsAuthenticated(false);
 
     navigate("/login");
   };
@@ -54,12 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
-        token,
         userId,
         role,
+        isAuthenticated,
         login,
         logout,
-        isAuthenticated: !!token,
       }}
     >
       {children}

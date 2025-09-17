@@ -1,9 +1,9 @@
-import React, { type ReactNode, useEffect, useState } from "react";
+import React, { type ReactNode, useState } from "react";
 import { PiExam } from "react-icons/pi";
 import { FaHome } from "react-icons/fa";
 import { IoIosMenu } from "react-icons/io";
 import Sidebar from "../components/Sidebar.tsx";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useAuth } from "../context/UseAuth.tsx";
 
 interface NavItem {
@@ -31,13 +31,6 @@ const Layout: React.FC = () => {
       ? [...commonNav, ...teacherNav]
       : [...commonNav, ...studentNav];
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      navigate("/login");
-    }
-  }, [navigate]);
   return (
     <div className="flex flex-col h-screen">
       <header className="flex items-center justify-between bg-foreground text-secondary p-4 shadow">
