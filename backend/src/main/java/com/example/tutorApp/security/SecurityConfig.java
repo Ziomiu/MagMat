@@ -49,7 +49,9 @@ public class SecurityConfig {
                                 "user/login",
                                 "user/register",
                                 "user/forgot-password",
-                                "user/reset-password"
+                                "user/reset-password",
+                                "user/logout",
+                                "user/refresh"
                         ).permitAll()
                         .requestMatchers(
                                 "token/verify-reset",

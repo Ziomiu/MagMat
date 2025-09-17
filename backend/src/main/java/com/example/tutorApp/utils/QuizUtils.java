@@ -7,10 +7,10 @@ import com.example.tutorApp.entity.QuestionType;
 import com.example.tutorApp.entity.Quiz;
 import com.example.tutorApp.entity.QuizAnswer;
 import com.example.tutorApp.entity.QuizQuestion;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+@Component
 public final class QuizUtils {
     private QuizUtils() {
 

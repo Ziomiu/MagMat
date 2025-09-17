@@ -1,7 +1,6 @@
 package com.example.tutorApp.controller;
 
 import com.example.tutorApp.entity.AppUser;
-import com.example.tutorApp.dto.UserDTO;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.request.ForgotRequest;
@@ -10,12 +9,18 @@ import com.example.tutorApp.response.LoginResponse;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.TokenService;
 import com.example.tutorApp.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -34,11 +39,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,
+                                               HttpServletResponse response) {
         logger.debug("Attempting to log in user: {}", loginRequest);
         AppUser user = userService.loginUser(loginRequest);
-        LoginResponse loginResponse = new LoginResponse(jwtUtil.generateToken(user.getId().toString(),
-                user.getUserRole().name()));
+        String accessToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getUserRole().name());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .secure(false)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        LoginResponse loginResponse = new LoginResponse(accessToken);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -63,4 +78,32 @@ public class UserController {
         userService.changePassword(resetRequest.password(), user);
         return ResponseEntity.ok("Password has been reset");
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
+        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
+            System.out.println("Kurcze pieczone");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = jwtUtil.extractUserId(refreshToken);
+        AppUser user = userService.findUserById(UUID.fromString(username));
+        String accessToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getUserRole().name());
+        LoginResponse loginResponse = new LoginResponse(accessToken);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+                .secure(false)
+                .httpOnly(true)
+                .path("/user/refresh")
+                .maxAge(0)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+
+        return ResponseEntity.ok().build();
+    }
+
 }
