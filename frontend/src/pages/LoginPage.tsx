@@ -6,11 +6,11 @@ import {
   CardFooter,
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/UseAuth.tsx";
-
+import { publicApi } from "../libs/api.ts";
 function LoginPage() {
   const { login } = useAuth();
   const [userEmail, setUserEmail] = useState("");
@@ -20,40 +20,36 @@ function LoginPage() {
   const [ready, setReady] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate("/");
-    } else {
-      setReady(true);
-    }
-  }, [navigate]);
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+
     if (!userEmail || !userPassword) {
       setError("All fields are required.");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8080/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail, password: userPassword }),
-      });
-      if (response.ok) {
-        const data: { token: string } = await response.json();
-        console.log(data);
-        login(data.token);
+      const response = await publicApi.post(
+        "/user/login",
+        { email: userEmail, password: userPassword },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
+      const data: { token: string } = response.data;
+
+      login(data.token);
+    } catch (err: any) {
+      console.error(err);
+
+      if (err.response) {
+        const msg = err.response.data || `Error ${err.response.status}`;
+        setError(msg);
       } else {
-        const msg = await response.text();
-        setError(msg || `Unknown error (${response.status}).`);
+        setError("Error while logging in");
       }
-    } catch (e) {
-      console.error(e);
-      setError("Error while logging in");
     }
   };
   if (!ready) {
