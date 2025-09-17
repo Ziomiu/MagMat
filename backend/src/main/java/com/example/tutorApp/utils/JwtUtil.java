@@ -15,22 +15,34 @@ import java.util.Date;
 public class JwtUtil {
     @Value("${JWT_KEY}")
     private String secret;
+    private final long ACCESS_EXPIRATION = 15 * 60 * 1000; // 15 min
+    private final long REFRESH_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     @PostConstruct
     private void init() {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
-        System.out.println(secret);
     }
 
-    public String generateToken(String userId, String role) {
+    public String generateAccessToken(String userId, String role) {
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + 3600 * 1000);
+        Date expirationDate = new Date(now.getTime() + ACCESS_EXPIRATION);
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                 .withSubject(userId)
                 .withIssuedAt(now)
                 .withExpiresAt(expirationDate)
                 .withClaim("role", role)
+                .sign(algorithm);
+    }
+
+    public String generateRefreshToken(String userId) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + REFRESH_EXPIRATION);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.create()
+                .withSubject(userId)
+                .withIssuedAt(now)
+                .withExpiresAt(expirationDate)
                 .sign(algorithm);
     }
 

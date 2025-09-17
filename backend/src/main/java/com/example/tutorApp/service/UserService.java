@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -50,6 +52,9 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+    public AppUser findUserById(UUID id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
 }
