@@ -88,7 +88,6 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
           className="border rounded px-3 py-2 w-full mb-4"
         />
 
-        {/* answers (scrollable area if too tall) */}
         {localQuestion.type !== "OPEN" && (
           <div className="flex-1 overflow-y-auto">
             <AnswerList

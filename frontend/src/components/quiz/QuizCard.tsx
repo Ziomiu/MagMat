@@ -3,6 +3,7 @@ import type { Quiz } from "./types.ts";
 import React, { useState } from "react";
 import { api } from "../../libs/api.ts";
 import axios from "axios";
+import StudentModal from "../student/StudentModal.tsx";
 
 type Props = {
   quiz: Quiz;
@@ -11,6 +12,7 @@ type Props = {
 
 function QuizCard({ quiz, setQuizzes }: Props) {
   const [error, setError] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this quiz?")) return;
@@ -55,8 +57,15 @@ function QuizCard({ quiz, setQuizzes }: Props) {
         >
           Delete
         </button>
+        <button
+          className="bg-orange-600 px-3 py-1 rounded text-white hover:bg-orange-600/80"
+          onClick={() => setModalOpen(true)}
+        >
+          Assign
+        </button>
       </div>
       <div className="text-sm text-red-700">{error}</div>
+      <StudentModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
