@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -56,5 +57,7 @@ public class UserService {
     public AppUser findUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
-
+    public List<AppUser> findAllStudents() {
+        return userRepository.findByUserRoleEquals(UserRole.STUDENT);
+    }
 }

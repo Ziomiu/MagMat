@@ -20,6 +20,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -104,6 +105,11 @@ public class UserController {
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/students")
+    public ResponseEntity<List<AppUser>> getAllStudents() {
+        return ResponseEntity.ok(userService.findAllStudents());
     }
 
 }
