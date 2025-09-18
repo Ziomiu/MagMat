@@ -8,6 +8,8 @@ import {
 import Input from "../components/ui/Input.tsx";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { publicApi } from "../libs/api.ts";
+import axios from "axios";
 
 function ForgotPassword() {
   const [userEmail, setUserEmail] = useState("");
@@ -26,24 +28,29 @@ function ForgotPassword() {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/user/forgot-password",
+      await publicApi.post(
+        "/user/forgot-password",
+        { email: userEmail },
         {
-          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: userEmail }),
         },
       );
-      if (response.ok) {
-        setReady(true);
+
+      setReady(true);
+    } catch (err: unknown) {
+      setDisabled(false);
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg =
+            err.response.data?.message ||
+            `Unknown error (${err.response.status})`;
+          setError(msg);
+        } else {
+          setError("Error while resetting password");
+        }
       } else {
-        setDisabled(false);
-        const msg = await response.text();
-        setError(msg || `Unknow error (${response.status}).`);
+        console.log(err);
       }
-    } catch (e) {
-      console.error(e);
-      setError("Error while resetting password");
     }
   };
 

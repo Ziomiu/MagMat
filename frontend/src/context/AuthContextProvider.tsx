@@ -9,38 +9,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const tryRefresh = async () => {
       try {
-        const res = await publicApi.post(
-          "/user/refresh",
-          {},
-          { withCredentials: true },
-        );
-
+        const res = await publicApi.post("/user/refresh", {});
         const data: { token: string } = res.data;
-        login(data.token);
-      } catch (err) {
-        console.log("No valid refresh token, staying logged out");
+        refresh(data.token);
+      } catch (e) {
+        console.log("Erorr while refreshing, staying logged out", e);
+      } finally {
+        setLoading(false);
       }
     };
 
     tryRefresh();
   }, []);
 
-  const login = (accessToken: string) => {
+  const refresh = (accessToken: string) => {
     const decoded = decodeJwt(accessToken);
     if (!decoded) return;
-
     setAccessToken(accessToken);
     setUserId(decoded.sub);
     setRole(decoded.role);
     setIsAuthenticated(true);
-
+  };
+  const login = (accessToken: string) => {
+    refresh(accessToken);
     navigate("/");
   };
 
@@ -58,8 +57,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUserId(null);
     setRole(null);
     setIsAuthenticated(false);
-
-    navigate("/login");
   };
 
   return (
@@ -68,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         userId,
         role,
         isAuthenticated,
+        loading,
         login,
         logout,
       }}

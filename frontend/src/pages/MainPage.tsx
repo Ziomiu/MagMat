@@ -1,13 +1,14 @@
+import { useAuth } from "../context/UseAuth.tsx";
+
 function MainPage() {
+  const { userId, role } = useAuth();
   return (
     <div>
       Strona główna :)
       <div className=" flex-1 items-center justify-center w-full text-lg text-red-700 overflow-auto">
-        {localStorage.getItem("token")}
+        {userId}
         <br />
-        {localStorage.getItem("userId")}
-        <br />
-        {localStorage.getItem("role")}
+        {role}
       </div>
     </div>
   );
