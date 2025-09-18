@@ -29,30 +29,57 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (cb: (token: string) => void) => {
+  refreshSubscribers.push(cb);
+};
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+};
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const orgRequest = error.config;
+    const originalRequest = error.config;
 
-    if (error.response?.status === 404 && orgRequest._retry) {
-      orgRequest._retry = true;
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
+    ) {
+      console.log(error);
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(api(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
-        const res = await axios.post(
-          "http://localhost:8080",
-          {},
-          { withCredentials: true },
-        );
-        const newAccessToken = res.data.access_token;
-        setAccessToken(newAccessToken);
-        orgRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return api(orgRequest);
+        const res = await publicApi.post("/user/refresh", {});
+        const newToken = res.data.token;
+        setAccessToken(newToken);
+        onRefreshed(newToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return api(originalRequest);
       } catch (refreshError) {
-        const navigate = useNavigate();
-        console.error("Token refresh failed: ", refreshError);
+        console.error("Token refresh failed:", refreshError);
         setAccessToken(null);
-        navigate("/login");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
+
+    return Promise.reject(error);
   },
 );

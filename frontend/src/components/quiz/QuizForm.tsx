@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import type { Question, Quiz } from "./types";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionModal from "./question/QuestionModal";
+import { api } from "../../libs/api.ts";
+import axios from "axios";
+import { useAuth } from "../../context/UseAuth.tsx";
 
 function QuizForm() {
+  const { userId } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -52,13 +56,14 @@ function QuizForm() {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/quiz/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-        .then((res) => res.json())
-        .then((data: Quiz) => setQuiz(data))
+      api
+        .get<Quiz>(`/quiz/${id}`)
+        .then((res) => setQuiz(res.data))
         .then(() => setLoading(false))
-        .catch((err) => setError([String(err)]));
+        .catch((err) => {
+          console.error(err);
+          setError([err.response?.data?.message || String(err)]);
+        });
     } else {
       setLoading(false);
     }
@@ -67,34 +72,33 @@ function QuizForm() {
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateQuiz()) return;
-    const method = id ? "PUT" : "POST";
-    console.log(quiz);
-    const url = id
-      ? `http://localhost:8080/quiz/${id}`
-      : "http://localhost:8080/quiz";
-    const userId = localStorage.getItem("userId");
+
+    const url = id ? `/quiz/${id}` : "/quiz";
+    const method = id ? "put" : "post";
 
     try {
       if (userId) {
         quiz.createdById = userId;
       }
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(quiz),
+
+      await api[method](url, quiz, {
+        headers: { "Content-Type": "application/json" },
       });
-      if (response.ok) {
-        navigate("/quiz");
+
+      navigate("/quiz");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg =
+            err.response.data?.message ||
+            `Unknown error (${err.response.status})`;
+          setError([msg]);
+        } else {
+          setError(["Error while saving quiz"]);
+        }
       } else {
-        const msg = await response.text();
-        setError([msg || `Unknown error (${response.status}).`]);
+        console.log(err);
       }
-    } catch (e) {
-      console.error(e);
-      setError(["Error while saving quiz"]);
     }
   };
 

@@ -11,13 +11,14 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/UseAuth.tsx";
 import { publicApi } from "../libs/api.ts";
+import axios from "axios";
+
 function LoginPage() {
   const { login } = useAuth();
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [ready, setReady] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,24 +42,19 @@ function LoginPage() {
       const data: { token: string } = response.data;
 
       login(data.token);
-    } catch (err: any) {
-      console.error(err);
-
-      if (err.response) {
-        const msg = err.response.data || `Error ${err.response.status}`;
-        setError(msg);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg = err.response.data || `Error ${err.response.status}`;
+          setError(msg);
+        } else {
+          setError("Error while logging in");
+        }
       } else {
-        setError("Error while logging in");
+        console.log(err);
       }
     }
   };
-  if (!ready) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-muted">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <Card className="w-full max-w-md">

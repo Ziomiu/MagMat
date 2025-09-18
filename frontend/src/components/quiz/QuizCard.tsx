@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import type { Quiz } from "./types.ts";
 import React, { useState } from "react";
+import { api } from "../../libs/api.ts";
+import axios from "axios";
 
 type Props = {
   quiz: Quiz;
@@ -12,20 +14,24 @@ function QuizCard({ quiz, setQuizzes }: Props) {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this quiz?")) return;
+
     try {
-      const response = await fetch(`http://localhost:8080/quiz/${quiz.id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      if (response.ok) {
-        setQuizzes((prev) => prev.filter((q) => q.id !== quiz.id));
+      await api.delete(`/quiz/${quiz.id}`);
+
+      setQuizzes((prev) => prev.filter((q) => q.id !== quiz.id));
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg =
+            err.response.data?.message ||
+            `Unknown error (${err.response.status})`;
+          setError(msg);
+        } else {
+          setError("Error while deleting quiz");
+        }
       } else {
-        const msg = await response.text();
-        setError(msg || `Unknown error (${response.status}).`);
+        console.error(err);
       }
-    } catch (e) {
-      console.error(e);
-      setError("Error while deleting quiz");
     }
   };
 

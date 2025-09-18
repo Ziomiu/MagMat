@@ -9,6 +9,8 @@ import {
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { publicApi } from "../libs/api.ts";
+import axios from "axios";
 
 const ResetPassword = () => {
   const [userPassword, setUserPassword] = useState("");
@@ -70,24 +72,28 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/user/reset-password",
+      await publicApi.post(
+        "/user/reset-password",
+        { token, password: userPassword },
         {
-          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: token, password: userPassword }),
         },
       );
 
-      if (response.ok) {
-        setResetDone(true);
+      setResetDone(true);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg =
+            err.response.data?.message ||
+            `Unknown error (${err.response.status})`;
+          setError(msg);
+        } else {
+          setError("Error while resetting password");
+        }
       } else {
-        const msg = await response.text();
-        setError(msg || `Unknown error  (${response.status}).`);
+        console.log(err);
       }
-    } catch (e) {
-      console.error(e);
-      setError("Error while resetting password");
     }
   };
   if (!tokenValid) {

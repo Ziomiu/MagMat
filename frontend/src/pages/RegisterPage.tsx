@@ -9,6 +9,8 @@ import {
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { publicApi } from "../libs/api.ts";
+import axios from "axios";
 
 function RegisterPage() {
   const [userName, setUserName] = useState("");
@@ -31,25 +33,30 @@ function RegisterPage() {
     }
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await publicApi.post(
+        "/user/register",
+        {
           name: userName,
           surname: userSurname,
           email: userEmail,
           password: userPassword,
-        }),
-      });
-      if (response.ok) {
-        setIsRegistered(true);
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+      setIsRegistered(true);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const msg = err.response.data || `Error ${err.response.status}`;
+          setError(msg);
+        } else {
+          setError("Error while creating account");
+        }
       } else {
-        const msg = await response.text();
-        setError(msg || `Unknown error (${response.status}).`);
+        console.log(err);
       }
-    } catch (e) {
-      console.error(e);
-      setError("Error while creating account.");
     } finally {
       setLoading(false);
     }
