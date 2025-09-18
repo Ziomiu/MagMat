@@ -6,10 +6,12 @@ import com.example.tutorApp.entity.UserRole;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
+import com.example.tutorApp.response.StudentResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,10 +56,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
+
     public AppUser findUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
-    public List<AppUser> findAllStudents() {
-        return userRepository.findByUserRoleEquals(UserRole.STUDENT);
+
+    public List<StudentResponse> findAllStudents() {
+        List<AppUser> users = userRepository.findByUserRoleEquals(UserRole.STUDENT);
+        return users.stream().map(user -> new StudentResponse(user.getName(), user.getSurname())).toList();
     }
 }

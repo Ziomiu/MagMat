@@ -6,6 +6,7 @@ import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.request.ForgotRequest;
 import com.example.tutorApp.request.ResetRequest;
 import com.example.tutorApp.response.LoginResponse;
+import com.example.tutorApp.response.StudentResponse;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.TokenService;
 import com.example.tutorApp.utils.JwtUtil;
@@ -108,7 +109,7 @@ public class UserController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<AppUser>> getAllStudents() {
+    public ResponseEntity<List<StudentResponse>> getAllStudents() {
         return ResponseEntity.ok(userService.findAllStudents());
     }
 
