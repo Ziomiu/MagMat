@@ -16,7 +16,8 @@ public class GlobalExceptionHandler {
             TokenExpiredException.class,
             TokenNotFoundException.class,
             SameAsOldPasswordException.class,
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            AssignmentNotFoundException.class,
     })
     public ResponseEntity<String> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

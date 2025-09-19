@@ -64,9 +64,14 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml"
                         ).permitAll()
-                        .requestMatchers("quiz").hasAnyRole("ADMIN","TEACHER","STUDENT")
-                        .requestMatchers("quiz/user/").hasAnyRole("ADMIN","TEACHER","STUDENT")
-                        .requestMatchers("quiz/").hasAnyRole("ADMIN","TEACHER","STUDENT")
+                        .requestMatchers(
+                                "quiz",
+                                "quiz/user/",
+                                "quiz/",
+                                "quiz/assign",
+                                "quiz/student/",
+                                "quiz/submit")
+                        .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class)
@@ -75,6 +80,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -87,6 +93,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
