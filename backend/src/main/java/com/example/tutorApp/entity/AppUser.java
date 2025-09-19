@@ -20,9 +20,6 @@ public class AppUser {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Quiz> createdQuizzes;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserAnswer> answers;
-
     public AppUser() {
     }
 

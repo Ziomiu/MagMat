@@ -1,6 +1,10 @@
 package com.example.tutorApp.controller;
 
 import com.example.tutorApp.dto.QuizDTO;
+import com.example.tutorApp.entity.Quiz;
+import com.example.tutorApp.entity.QuizAssignment;
+import com.example.tutorApp.request.AssignStudentsRequest;
+import com.example.tutorApp.request.QuizSubmissionRequest;
 import com.example.tutorApp.service.QuizService;
 import com.example.tutorApp.utils.QuizUtils;
 import org.slf4j.LoggerFactory;
@@ -49,4 +53,22 @@ public class QuizController {
         quizService.updateQuizById(id, quizDTO);
         return ResponseEntity.ok("");
     }
+
+    @PostMapping("/assign")
+    public ResponseEntity<String> assignStudents(@RequestBody AssignStudentsRequest request) {
+        quizService.assignQuizToUser(request.quizId(), request.studentIds());
+        return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<QuizDTO>> getQuizzesForStudent(@PathVariable UUID studentId) {
+        return ResponseEntity.ok(quizService.getAssignedQuizzes(studentId));
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<String> submitQuizAnswers(@RequestBody QuizSubmissionRequest request) {
+        quizService.submitQuizAnswers(request);
+        return ResponseEntity.ok("");
+    }
+
 }
