@@ -12,6 +12,8 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import QuizForm from "./components/quiz/QuizForm.tsx";
 import { AuthProvider } from "./context/AuthContextProvider.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import StudentQuizzesList from "./components/quiz/student/StudentQuizzesList.tsx";
+import QuizTakingForm from "./components/quiz/QuizTakingForm.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -48,6 +50,22 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
                   <QuizForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/take"
+              element={
+                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                  <StudentQuizzesList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/take/:id"
+              element={
+                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                  <QuizTakingForm />
                 </ProtectedRoute>
               }
             />
