@@ -22,7 +22,7 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
   if (!open) return null;
 
   const addAnswer = () => {
-    if (localQuestion.answers.length >= 6) return; // 👈 limit to 6
+    if (localQuestion.answers.length >= 6) return;
     const newAnswer: Answer = {
       id: crypto.randomUUID(),
       text: "",

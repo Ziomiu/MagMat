@@ -23,6 +23,8 @@ public class StudentAnswer {
     private QuizAnswer answer;
 
     private String textAnswer;
+    private Boolean correct;
+    private String comment;
 
     public UUID getId() {
         return id;
@@ -58,5 +60,21 @@ public class StudentAnswer {
 
     public void setTextAnswer(String textAnswer) {
         this.textAnswer = textAnswer;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Boolean getCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(Boolean correct) {
+        this.correct = correct;
     }
 }
