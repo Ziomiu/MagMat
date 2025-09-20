@@ -1,4 +1,6 @@
 package com.example.tutorApp.response;
 
-public record StudentResponse(String name,String surname) {
+import java.util.UUID;
+
+public record StudentResponse(UUID studentId, String name, String surname) {
 }

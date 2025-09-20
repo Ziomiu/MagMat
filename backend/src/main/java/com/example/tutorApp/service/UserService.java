@@ -63,6 +63,7 @@ public class UserService {
 
     public List<StudentResponse> findAllStudents() {
         List<AppUser> users = userRepository.findByUserRoleEquals(UserRole.STUDENT);
-        return users.stream().map(user -> new StudentResponse(user.getName(), user.getSurname())).toList();
+        return users.stream().map(user -> new StudentResponse(user.getId(),user.getName(),
+                user.getSurname())).toList();
     }
 }

@@ -8,7 +8,7 @@ type Props = {
 };
 
 interface Student {
-  id: string;
+  studentId: string;
   name: string;
   surname: string;
 }
@@ -45,12 +45,14 @@ function StudentModal({ open, onClose, quizId }: Props) {
     `${s.name} ${s.surname}`.toLowerCase().includes(search.toLowerCase()),
   );
   const toggleSelect = (id: string) => {
+    console.log(id);
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
     );
   };
 
   const handleConfirm = async () => {
+    console.log(selected, quizId);
     try {
       await api.post(`/quiz/assign`, { quizId: quizId, studentIds: selected });
       onClose();
@@ -81,11 +83,11 @@ function StudentModal({ open, onClose, quizId }: Props) {
           <ul className="max-h-60 overflow-y-auto space-y-2">
             {filtered.length > 0 ? (
               filtered.map((student) => {
-                const isSelected = selected.includes(student.id);
+                const isSelected = selected.includes(student.studentId);
                 return (
                   <li
-                    key={student.id}
-                    onClick={() => toggleSelect(student.id)}
+                    key={student.studentId}
+                    onClick={() => toggleSelect(student.studentId)}
                     className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer transition ${
                       isSelected
                         ? "bg-blue-50 border-blue-400"
