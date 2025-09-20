@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../libs/api";
 import type { Quiz } from "./types";
+import { useAuth } from "../../context/UseAuth.tsx";
 
 type SubmissionAnswer = {
   questionId: string;
@@ -10,11 +11,12 @@ type SubmissionAnswer = {
 };
 
 function QuizTakingForm() {
+  const { userId } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, SubmissionAnswer[]>>(
     {},
@@ -59,7 +61,27 @@ function QuizTakingForm() {
   };
 
   const handleSubmit = async () => {
-    console.log(answers);
+    const submission = {
+      quizId: id,
+      studentId: userId,
+      answers: Object.values(answers).flat(),
+    };
+    console.log(submission);
+    if (!quiz) return;
+    try {
+      const submission = {
+        quizId: id,
+        studentId: userId,
+        answers: Object.values(answers).flat(),
+      };
+      console.log(submission);
+      await api.post(`/quiz/submit`, submission);
+      alert("Quiz submitted successfully!");
+      navigate("/quiz/take");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to submit quiz");
+    }
   };
 
   if (loading) return <p>Loading quiz...</p>;
