@@ -7,7 +7,7 @@ import com.example.tutorApp.errors.QuizNotFound;
 import com.example.tutorApp.errors.UserNotFoundException;
 import com.example.tutorApp.repository.*;
 import com.example.tutorApp.request.QuizSubmissionRequest;
-import com.example.tutorApp.request.SubmittedAnswerRequest;
+import com.example.tutorApp.dto.SubmittedAnswerDTO;
 import com.example.tutorApp.utils.QuizUtils;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +87,7 @@ public class QuizService {
         QuizAssignment assignment = quizAssignmentRepository
                 .findByStudentIdAndQuizId(student.getId(), quizSubmissionRequest.quizId())
                 .orElseThrow(AssignmentNotFoundException::new);
-        for (SubmittedAnswerRequest sa : quizSubmissionRequest.answers()) {
+        for (SubmittedAnswerDTO sa : quizSubmissionRequest.answers()) {
             QuizQuestion question = quizQuestionRepository.findById(sa.questionId()).orElseThrow();
 
             StudentAnswer studentAnswer = new StudentAnswer();

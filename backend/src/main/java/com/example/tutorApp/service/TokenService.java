@@ -74,7 +74,6 @@ public class TokenService {
     }
 
     public void verifyResetToken(String token) {
-        PasswordResetToken passwordResetToken =
-                passwordResetTokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new);
+        passwordResetTokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new);
     }
 }

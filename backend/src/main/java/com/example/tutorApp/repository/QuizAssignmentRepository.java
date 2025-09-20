@@ -11,4 +11,6 @@ public interface QuizAssignmentRepository extends JpaRepository<QuizAssignment, 
     List<QuizAssignment> findByStudentId(UUID studentId);
 
     Optional<QuizAssignment> findByStudentIdAndQuizId(UUID studentId, UUID quizId);
+
+    List<QuizAssignment> findByQuizId(UUID quizId);
 }
