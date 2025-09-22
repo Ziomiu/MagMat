@@ -1,6 +1,7 @@
-import QuizCard from "./QuizCard.tsx";
-import type { Quiz } from "./types.ts";
+import type { Quiz } from "../types.ts";
 import React from "react";
+import QuizCard from "./QuizCard.tsx";
+import EntityList from "../EntityList.tsx";
 
 type Props = {
   quizzes: Quiz[];
@@ -9,11 +10,14 @@ type Props = {
 
 function QuizList({ quizzes, setQuizzes }: Props) {
   return (
-    <div className="p-4 ">
-      {quizzes.map((quiz) => (
+    <EntityList
+      items={quizzes}
+      emptyMessage="No quizzes created yet."
+      renderItem={(quiz) => (
         <QuizCard key={quiz.id} quiz={quiz} setQuizzes={setQuizzes} />
-      ))}
-    </div>
+      )}
+      className="p-4"
+    />
   );
 }
 

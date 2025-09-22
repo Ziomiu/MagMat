@@ -1,11 +1,11 @@
-import Input from "../ui/Input";
+import Input from "../../ui/Input.tsx";
 import { useEffect, useState } from "react";
-import type { Question, Quiz } from "./types";
+import type { Question, Quiz } from "../types.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import QuestionModal from "./question/QuestionModal";
-import { api } from "../../libs/api.ts";
+import QuestionModal from "../question/QuestionModal.tsx";
+import { api } from "../../../libs/api.ts";
 import axios from "axios";
-import { useAuth } from "../../context/UseAuth.tsx";
+import { useAuth } from "../../../context/UseAuth.tsx";
 
 function QuizForm() {
   const { userId } = useAuth();

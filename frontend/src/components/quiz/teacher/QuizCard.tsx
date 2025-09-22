@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import type { Quiz } from "./types.ts";
+import type { Quiz } from "../types.ts";
 import React, { useState } from "react";
-import { api } from "../../libs/api.ts";
+import { api } from "../../../libs/api.ts";
 import axios from "axios";
-import StudentModal from "./student/StudentModal.tsx";
+import StudentModal from "../student/StudentModal.tsx";
+import Card from "../Card.tsx";
 
 type Props = {
   quiz: Quiz;
@@ -20,7 +21,6 @@ function QuizCard({ quiz, setQuizzes }: Props) {
 
     try {
       await api.delete(`/quiz/${quiz.id}`);
-
       setQuizzes((prev) => prev.filter((q) => q.id !== quiz.id));
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -39,7 +39,7 @@ function QuizCard({ quiz, setQuizzes }: Props) {
   };
 
   return (
-    <div className="border rounded m-2 p-4 shadow hover:shadow-lg transition">
+    <Card>
       <h2 className="text-xl font-semibold">{quiz.title}</h2>
       <p className="text-gray-500">{quiz.description}</p>
       <p className="mt-2 text-sm text-gray-400">
@@ -67,6 +67,12 @@ function QuizCard({ quiz, setQuizzes }: Props) {
         >
           Assign
         </button>
+        <Link
+          to={`/teacher/quiz/${quiz.id}/submissions`}
+          className="bg-blue-500 px-3 py-1 rounded text-white hover:bg-blue-600"
+        >
+          See Submissions
+        </Link>
       </div>
       <div className="text-sm text-red-700">{error}</div>
       <StudentModal
@@ -74,7 +80,7 @@ function QuizCard({ quiz, setQuizzes }: Props) {
         onClose={() => setModalOpen(false)}
         quizId={selectedQuizId}
       />
-    </div>
+    </Card>
   );
 }
 

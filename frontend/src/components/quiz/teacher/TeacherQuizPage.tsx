@@ -1,11 +1,11 @@
 import QuizList from "./QuizList.tsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Quiz } from "./types.ts";
-import { useAuth } from "../../context/UseAuth.tsx";
-import { api } from "../../libs/api.ts";
+import type { Quiz } from "../types.ts";
+import { useAuth } from "../../../context/UseAuth.tsx";
+import { api } from "../../../libs/api.ts";
 
-const QuizDashboard = () => {
+const TeacherQuizPage = () => {
   const { userId } = useAuth();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,4 +44,4 @@ const QuizDashboard = () => {
   );
 };
 
-export default QuizDashboard;
+export default TeacherQuizPage;
