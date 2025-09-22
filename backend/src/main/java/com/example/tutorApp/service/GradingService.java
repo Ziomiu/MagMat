@@ -22,12 +22,10 @@ import java.util.UUID;
 public class GradingService {
     private final QuizAssignmentRepository assignmentRepo;
     private final StudentAnswerRepository answerRepo;
-    private final UserRepository userRepo;
 
     public GradingService(QuizAssignmentRepository assignmentRepo, StudentAnswerRepository answerRepo, UserRepository userRepo) {
         this.assignmentRepo = assignmentRepo;
         this.answerRepo = answerRepo;
-        this.userRepo = userRepo;
     }
 
     public List<SubmissionSummaryDTO> listSubmissionsForQuiz(UUID quizId) {
@@ -36,9 +34,10 @@ public class GradingService {
                 .map(a -> new SubmissionSummaryDTO(
                         a.getId(),
                         a.getStudent().getId(),
-                        a.getStudent().getName() + " " + a.getStudent().getSurname(),
+                        a.getStudent().getName(),
+                        a.getStudent().getSurname(),
                         a.getCompleted()
-                        ))
+                ))
                 .toList();
     }
 
@@ -63,7 +62,8 @@ public class GradingService {
                 assignment.getId(),
                 assignment.getQuiz().getId(),
                 assignment.getStudent().getId(),
-                assignment.getStudent().getName() + " " + assignment.getStudent().getSurname(),
+                assignment.getStudent().getName(),
+                assignment.getStudent().getSurname(),
                 null,
                 answerDtos
         );

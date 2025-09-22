@@ -102,7 +102,8 @@ public class QuizService {
             if (sa.textAnswer() != null && !sa.textAnswer().isBlank()) {
                 studentAnswer.setTextAnswer(sa.textAnswer());
             }
-
+            assignment.setCompleted(true);
+            quizAssignmentRepository.save(assignment);
             studentAnswerRepository.save(studentAnswer);
         }
 
