@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public record SubmissionDetailsDTO(UUID submissionId, UUID quizId, UUID studentId,
-                                  String studentName,
+                                  String name,String surname,
                                   LocalDateTime submittedAt, List<StudentAnswerDTO> answers) {}

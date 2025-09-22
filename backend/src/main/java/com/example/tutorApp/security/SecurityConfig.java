@@ -72,6 +72,12 @@ public class SecurityConfig {
                                 "quiz/student/",
                                 "quiz/submit")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                        .requestMatchers(
+                                "teacher/",
+                                "teacher/quiz/",
+                                "teacher/submission/",
+                                "teacher/submission/grade")
+                        .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class)
