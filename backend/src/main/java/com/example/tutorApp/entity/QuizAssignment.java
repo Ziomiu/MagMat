@@ -2,6 +2,7 @@ package com.example.tutorApp.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,8 @@ public class QuizAssignment {
     private Quiz quiz;
 
     private boolean completed = false;
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StudentAnswer> answers;
 
     public UUID getId() {
         return id;
@@ -46,5 +49,13 @@ public class QuizAssignment {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public List<StudentAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<StudentAnswer> answers) {
+        this.answers = answers;
     }
 }
