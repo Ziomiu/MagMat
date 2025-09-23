@@ -25,6 +25,11 @@ const Layout: React.FC = () => {
       path: "/student/submissions",
       icon: <PiExam size={20} />,
     },
+    {
+      name: "Quiz submissions",
+      path: "/teacher/quiz/submissions",
+      icon: <PiExam size={20} />,
+    },
   ];
 
   const teacherNav = [
