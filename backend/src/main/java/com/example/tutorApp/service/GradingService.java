@@ -79,4 +79,15 @@ public class GradingService {
             answerRepo.save(sa);
         }
     }
+    public List<SubmissionSummaryDTO> getQuizSubmissions(UUID quizId) {
+        return assignmentRepo.findByQuizId(quizId).stream()
+                .map(a -> new SubmissionSummaryDTO(
+                        a.getId(),
+                        a.getStudent().getId(),
+                        a.getStudent().getName(),
+                        a.getStudent().getSurname(),
+                        a.getAnswers().stream().anyMatch(ans -> ans.getCorrect() != null)
+                ))
+                .toList();
+    }
 }

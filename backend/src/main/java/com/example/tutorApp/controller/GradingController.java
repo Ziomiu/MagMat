@@ -34,4 +34,8 @@ public class GradingController {
         gradingService.gradeSubmission(request.grades());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/quiz/{quizId}/submission")
+    public ResponseEntity<List<SubmissionSummaryDTO>> getSubmissions(@PathVariable UUID quizId) {
+        return ResponseEntity.ok(gradingService.getQuizSubmissions(quizId));
+    }
 }
