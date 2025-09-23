@@ -17,6 +17,9 @@ import QuizTakingForm from "./components/quiz/student/QuizTakingForm.tsx";
 import TeacherSubmissionsPage from "./components/quiz/teacher/TeacherSubmissionsPage.tsx";
 import SubmissionDetails from "./components/quiz/teacher/SubmissionDetails.tsx";
 import SubmissionsList from "./components/quiz/student/SubmissionList.tsx";
+import StudentFeedback from "./components/quiz/student/StudentFeedback.tsx";
+import TeacherQuizSubmissions from "./components/quiz/teacher/TeacherQuizSubmissions.tsx";
+import QuizSubmissionsPage from "./components/quiz/teacher/QuizSubmissionsPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -93,6 +96,30 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
                   <SubmissionsList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/submission/:submissionId/feedback"
+              element={
+                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                  <StudentFeedback />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/quiz/:quizId/submissions"
+              element={
+                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                  <TeacherQuizSubmissions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/quiz/submissions"
+              element={
+                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                  <QuizSubmissionsPage />
                 </ProtectedRoute>
               }
             />

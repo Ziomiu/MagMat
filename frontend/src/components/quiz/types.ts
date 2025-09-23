@@ -57,3 +57,25 @@ export type StudentSubmissionListItem = {
   submittedAt: string | null;
   graded: boolean;
 };
+export type StudentFeedbackAnswer = {
+  questionId: string;
+  questionText: string;
+  studentAnswerText: string | null;
+  correctAnswerText: string | null;
+  correct: boolean | null;
+  teacherComment: string | null;
+};
+
+export type StudentFeedbackSubmission = {
+  submissionId: string;
+  quizId: string;
+  quizTitle: string;
+  answers: StudentFeedbackAnswer[];
+};
+export type QuizSubmissionSummary = {
+  submissionId: string;
+  studentId: string;
+  studentName: string;
+  studentSurname: string;
+  completed: boolean;
+};
