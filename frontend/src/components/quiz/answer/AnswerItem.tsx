@@ -32,7 +32,7 @@ function AnswerItem({
         onChange={(e) => updateAnswer({ ...answer, text: e.target.value })}
         className="border rounded px-2 py-1 flex-1"
       />
-      <label className="flex items-center gap-1 flex">
+      <label className="flex items-center gap-1">
         Correct
         <input
           name={type === "SINGLE" ? `question-${questionId}` : undefined}

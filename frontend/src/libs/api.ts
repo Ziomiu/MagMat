@@ -63,7 +63,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await publicApi.post("/user/refresh", {});
+        const res = await publicApi.post("/token/refresh", {});
         const newToken = res.data.token;
         setAccessToken(newToken);
         onRefreshed(newToken);

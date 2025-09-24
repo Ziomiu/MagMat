@@ -18,8 +18,6 @@ function TeacherSubmissionsPage() {
           `/teacher/quiz/${id}/submissions`,
         );
         setSubmissions(res.data);
-        console.log(res.data);
-        console.log("xdddddddd");
       } catch (err: any) {
         console.error(err);
         setError("Failed to load submissions");

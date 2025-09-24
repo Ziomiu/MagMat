@@ -61,21 +61,13 @@ function QuizTakingForm() {
   };
 
   const handleSubmit = async () => {
-    const submission = {
-      quizId: id,
-      studentId: userId,
-      answers: Object.values(answers).flat(),
-    };
-    console.log(submission);
     if (!quiz) return;
     try {
       const submission = {
-        quizId: id,
         studentId: userId,
         answers: Object.values(answers).flat(),
       };
-      console.log(submission);
-      await api.post(`/quiz/submit`, submission);
+      await api.post(`/quiz/${quiz.id}/submit`, submission);
       alert("Quiz submitted successfully!");
       navigate("/quiz/take");
     } catch (err) {

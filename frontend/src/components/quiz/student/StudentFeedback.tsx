@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../../libs/api";
 import { useParams, useNavigate } from "react-router-dom";
 import type { StudentFeedbackSubmission } from "../types";
+import { useAuth } from "../../../context/UseAuth.tsx";
 
 function StudentFeedback() {
+  const { userId } = useAuth();
   const { submissionId } = useParams<{ submissionId: string }>();
   const [feedback, setFeedback] = useState<StudentFeedbackSubmission | null>(
     null,
@@ -17,7 +19,7 @@ function StudentFeedback() {
     (async () => {
       try {
         const res = await api.get<StudentFeedbackSubmission>(
-          `/student/submission/${submissionId}/feedback`,
+          `/student/${userId}/submission/${submissionId}/feedback`,
         );
         setFeedback(res.data);
       } catch (err: any) {

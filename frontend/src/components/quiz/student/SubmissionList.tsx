@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { api } from "../../../libs/api.ts";
 import { Link } from "react-router-dom";
 import type { StudentSubmissionListItem } from "../types";
+import { useAuth } from "../../../context/UseAuth.tsx";
 
 function SubmissionsList() {
+  const { userId } = useAuth();
   const [submissions, setSubmissions] = useState<StudentSubmissionListItem[]>(
     [],
   );
@@ -14,7 +16,7 @@ function SubmissionsList() {
     (async () => {
       try {
         const res = await api.get<StudentSubmissionListItem[]>(
-          "/student/submissions",
+          `/student/${userId}/submissions`,
         );
         setSubmissions(res.data);
       } catch (err) {

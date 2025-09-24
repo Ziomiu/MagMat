@@ -6,7 +6,7 @@ import {
   CardFooter,
 } from "../components/Card.tsx";
 import Input from "../components/ui/Input.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/UseAuth.tsx";
@@ -14,13 +14,17 @@ import { publicApi } from "../libs/api.ts";
 import axios from "axios";
 
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  });
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");

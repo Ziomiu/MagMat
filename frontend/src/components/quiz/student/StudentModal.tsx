@@ -26,7 +26,7 @@ function StudentModal({ open, onClose, quizId }: Props) {
     const fetchStudents = async () => {
       try {
         setLoading(true);
-        const res = await api.get<Student[]>("/user/students");
+        const res = await api.get<Student[]>("/student");
         setStudents(res.data);
       } catch (err: any) {
         console.error(err);
@@ -52,9 +52,8 @@ function StudentModal({ open, onClose, quizId }: Props) {
   };
 
   const handleConfirm = async () => {
-    console.log(selected, quizId);
     try {
-      await api.post(`/quiz/assign`, { quizId: quizId, studentIds: selected });
+      await api.post(`/quiz/${quizId}/assign`, { studentIds: selected });
       onClose();
     } catch (err: any) {
       console.error("Assignment failed:", err);
