@@ -6,7 +6,7 @@ type CardProps = {
 function Card({ children, className = "" }: CardProps) {
   return (
     <div
-      className={`border rounded-lg p-4 m-2 shadow hover:shadow-md transition ${className}`}
+      className={`border rounded-lg p-4 shadow hover:shadow-md transition ${className}`}
     >
       {children}
     </div>

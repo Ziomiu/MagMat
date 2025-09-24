@@ -46,7 +46,7 @@ public class UserController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .secure(false)
                 .httpOnly(true)
-                .path("/user/refresh")
+                .path("/token/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -81,7 +81,7 @@ public class UserController {
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                 .secure(false)
                 .httpOnly(true)
-                .path("/user/refresh")
+                .path("/token/refresh")
                 .maxAge(0)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());

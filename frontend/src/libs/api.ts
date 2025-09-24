@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export const api = axios.create({
   baseURL: "http://localhost:8080/",
@@ -63,7 +62,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await publicApi.post("/user/refresh", {});
+        const res = await publicApi.post("/token/refresh", {});
         const newToken = res.data.token;
         setAccessToken(newToken);
         onRefreshed(newToken);

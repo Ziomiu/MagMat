@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const tryRefresh = async () => {
       try {
-        const res = await publicApi.post("/user/refresh", {});
+        const res = await publicApi.post("/token/refresh", {});
         const data: { token: string } = res.data;
         refresh(data.token);
       } catch (e) {

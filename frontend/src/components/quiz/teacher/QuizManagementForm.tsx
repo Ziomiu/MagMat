@@ -7,7 +7,7 @@ import { api } from "../../../libs/api.ts";
 import axios from "axios";
 import { useAuth } from "../../../context/UseAuth.tsx";
 
-function QuizForm() {
+function QuizManagementForm() {
   const { userId } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -246,4 +246,4 @@ function QuizForm() {
   );
 }
 
-export default QuizForm;
+export default QuizManagementForm;

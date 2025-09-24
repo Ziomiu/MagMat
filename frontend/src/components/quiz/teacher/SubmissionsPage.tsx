@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import type { SubmissionSummary } from "../types";
 import SubmissionList from "./SubmissionList.tsx";
 
-function TeacherSubmissionsPage() {
+function SubmissionsPage() {
   const { id } = useParams<{ id: string }>();
   const [submissions, setSubmissions] = useState<SubmissionSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,8 +18,6 @@ function TeacherSubmissionsPage() {
           `/teacher/quiz/${id}/submissions`,
         );
         setSubmissions(res.data);
-        console.log(res.data);
-        console.log("xdddddddd");
       } catch (err: any) {
         console.error(err);
         setError("Failed to load submissions");
@@ -33,11 +31,11 @@ function TeacherSubmissionsPage() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Submissions</h1>
       <SubmissionList submissions={submissions} />
     </div>
   );
 }
 
-export default TeacherSubmissionsPage;
+export default SubmissionsPage;

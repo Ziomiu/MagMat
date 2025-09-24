@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../../libs/api";
 import type { Quiz } from "../types";
@@ -28,7 +28,7 @@ function TeacherQuizzesPanel() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className=" mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">My Quizzes</h1>
       {quizzes.length === 0 ? (
         <p className="text-gray-500">You haven’t created any quizzes yet.</p>

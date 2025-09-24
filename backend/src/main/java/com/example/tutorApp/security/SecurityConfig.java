@@ -50,12 +50,12 @@ public class SecurityConfig {
                                 "/user/register",
                                 "/user/forgot-password",
                                 "/user/reset-password",
-                                "/user/logout",
-                                "/user/refresh"
+                                "/user/logout"
                         ).permitAll()
                         .requestMatchers(
                                 "/token/verify-reset",
-                                "/token/confirm-email"
+                                "/token/confirm-email",
+                                "/token/refresh"
                         ).permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(
