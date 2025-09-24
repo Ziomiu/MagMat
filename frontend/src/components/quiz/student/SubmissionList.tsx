@@ -32,7 +32,7 @@ function SubmissionsList() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">My Quiz Submissions</h1>
 
       {submissions.length === 0 ? (

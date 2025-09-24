@@ -11,7 +11,7 @@ type Props = {
   setQuizzes: React.Dispatch<React.SetStateAction<Quiz[]>>;
 };
 
-function QuizCard({ quiz, setQuizzes }: Props) {
+function QuizManagementCard({ quiz, setQuizzes }: Props) {
   const [error, setError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedQuizId, setSelectedQuizId] = useState("");
@@ -39,7 +39,7 @@ function QuizCard({ quiz, setQuizzes }: Props) {
   };
 
   return (
-    <Card>
+    <Card className="mb-4">
       <h2 className="text-xl font-semibold">{quiz.title}</h2>
       <p className="text-gray-500">{quiz.description}</p>
       <p className="mt-2 text-sm text-gray-400">
@@ -84,4 +84,4 @@ function QuizCard({ quiz, setQuizzes }: Props) {
   );
 }
 
-export default QuizCard;
+export default QuizManagementCard;

@@ -69,7 +69,7 @@ function QuizTakingForm() {
       };
       await api.post(`/quiz/${quiz.id}/submit`, submission);
       alert("Quiz submitted successfully!");
-      navigate("/quiz/take");
+      navigate("/student/quiz/take");
     } catch (err) {
       console.error(err);
       setError("Failed to submit quiz");

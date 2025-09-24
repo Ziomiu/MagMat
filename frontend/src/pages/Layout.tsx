@@ -19,7 +19,11 @@ const Layout: React.FC = () => {
 
   const studentNav = [
     { name: "Quizzes", path: "/quiz", icon: <PiExam size={20} /> },
-    { name: "Take Quiz", path: "/quiz/take", icon: <PiExam size={20} /> },
+    {
+      name: "Take Quiz",
+      path: "/student/quiz/take",
+      icon: <PiExam size={20} />,
+    },
     {
       name: "Your submissions",
       path: "/student/submissions",
@@ -35,7 +39,11 @@ const Layout: React.FC = () => {
   const teacherNav = [
     { name: "Quiz Dashboard", path: "/quiz", icon: <PiExam size={20} /> },
     { name: "Create Quiz", path: "/quiz/create", icon: <PiExam size={20} /> },
-    { name: "Take Quiz", path: "/quiz/take", icon: <PiExam size={20} /> },
+    {
+      name: "Take Quiz",
+      path: "/student/quiz/take",
+      icon: <PiExam size={20} />,
+    },
     {
       name: "Your submissions",
       path: "/student/submissions",

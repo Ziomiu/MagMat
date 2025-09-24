@@ -1,11 +1,11 @@
-import QuizList from "./QuizList.tsx";
+import QuizManagementList from "./QuizManagementList.tsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Quiz } from "../types.ts";
 import { useAuth } from "../../../context/UseAuth.tsx";
 import { api } from "../../../libs/api.ts";
 
-const TeacherQuizPage = () => {
+const QuizManagementPage = () => {
   const { userId } = useAuth();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,9 +39,9 @@ const TeacherQuizPage = () => {
           Create Quiz
         </Link>
       </div>
-      <QuizList quizzes={quizzes} setQuizzes={setQuizzes} />
+      <QuizManagementList quizzes={quizzes} setQuizzes={setQuizzes} />
     </>
   );
 };
 
-export default TeacherQuizPage;
+export default QuizManagementPage;

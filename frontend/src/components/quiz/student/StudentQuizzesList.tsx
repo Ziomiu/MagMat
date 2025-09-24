@@ -30,7 +30,7 @@ function StudentQuizzesList() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">My Quizzes</h1>
       <EntityList
         items={quizzes}
