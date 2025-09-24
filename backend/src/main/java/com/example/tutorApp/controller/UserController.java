@@ -1,28 +1,23 @@
 package com.example.tutorApp.controller;
 
 import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.request.ForgotPasswordRequest;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
-import com.example.tutorApp.request.ForgotRequest;
-import com.example.tutorApp.request.ResetRequest;
+import com.example.tutorApp.request.ResetPasswordRequest;
 import com.example.tutorApp.response.LoginResponse;
-import com.example.tutorApp.response.StudentResponse;
-import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.service.TokenService;
+import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -67,32 +62,18 @@ public class UserController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody ForgotRequest forgotRequest) {
-        logger.debug("Attempting to prepare password reset: {}", forgotRequest);
-        tokenService.requestPasswordResetToken(forgotRequest.email());
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        logger.debug("Attempting to prepare password reset: {}", forgotPasswordRequest);
+        tokenService.sendPasswordResetToken(forgotPasswordRequest.email());
         return ResponseEntity.ok("A reset email has been sent");
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetRequest resetRequest) {
-        logger.debug("Attempting to reset password: {}", resetRequest);
-        AppUser user = tokenService.getResetTokenUser(resetRequest.token());
-        userService.changePassword(resetRequest.password(), user);
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        logger.debug("Attempting to reset password: {}", resetPasswordRequest);
+        AppUser user = tokenService.getResetTokenUser(resetPasswordRequest.token());
+        userService.changeUserPassword(resetPasswordRequest.password(), user);
         return ResponseEntity.ok("Password has been reset");
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
-        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
-            System.out.println("Kurcze pieczone");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        String username = jwtUtil.extractUserId(refreshToken);
-        AppUser user = userService.findUserById(UUID.fromString(username));
-        String accessToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getUserRole().name());
-        LoginResponse loginResponse = new LoginResponse(accessToken);
-        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/logout")
@@ -107,10 +88,4 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/students")
-    public ResponseEntity<List<StudentResponse>> getAllStudents() {
-        return ResponseEntity.ok(userService.findAllStudents());
-    }
-
 }

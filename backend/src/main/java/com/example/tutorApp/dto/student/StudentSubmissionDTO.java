@@ -1,6 +1,5 @@
-package com.example.tutorApp.dto;
+package com.example.tutorApp.dto.student;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record StudentSubmissionDTO(

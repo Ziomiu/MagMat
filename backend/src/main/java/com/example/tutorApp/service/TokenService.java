@@ -57,7 +57,7 @@ public class TokenService {
         }
     }
 
-    public void requestPasswordResetToken(String email) {
+    public void sendPasswordResetToken(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
         PasswordResetToken passwordResetToken = new PasswordResetToken(user);
         passwordResetTokenRepository.save(passwordResetToken);

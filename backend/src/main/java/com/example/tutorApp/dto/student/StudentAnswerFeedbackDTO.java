@@ -1,8 +1,8 @@
-package com.example.tutorApp.dto;
+package com.example.tutorApp.dto.student;
 
 import java.util.UUID;
 
-public record StudentFeedbackAnswerDTO(
+public record StudentAnswerFeedbackDTO(
         UUID questionId,
         String questionText,
         String studentAnswerText,

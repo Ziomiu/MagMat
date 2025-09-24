@@ -20,8 +20,11 @@ public class Quiz {
 
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizQuestion> questions;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuizAssignment> assignments;
 
     @ManyToOne
     @JoinColumn(name = "created_by_id")

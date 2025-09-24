@@ -1,13 +1,13 @@
 package com.example.tutorApp.service;
 
-import com.example.tutorApp.dto.QuizDTO;
+import com.example.tutorApp.dto.quiz.QuizDTO;
 import com.example.tutorApp.entity.*;
 import com.example.tutorApp.errors.AssignmentNotFoundException;
 import com.example.tutorApp.errors.QuizNotFound;
 import com.example.tutorApp.errors.UserNotFoundException;
 import com.example.tutorApp.repository.*;
-import com.example.tutorApp.request.QuizSubmissionRequest;
-import com.example.tutorApp.dto.SubmittedAnswerDTO;
+import com.example.tutorApp.request.QuizAnswersSubmissionRequest;
+import com.example.tutorApp.dto.student.SubmittedAnswerDTO;
 import com.example.tutorApp.utils.QuizUtils;
 import org.springframework.stereotype.Service;
 
@@ -75,19 +75,17 @@ public class QuizService {
 
     public List<QuizDTO> getAssignedQuizzes(UUID studentId) {
         List<QuizAssignment> assignments = quizAssignmentRepository.findByStudentId(studentId);
-        return assignments.stream().map(q -> {
-                    return QuizUtils.toQuizDTO(q.getQuiz());
-                })
+        return assignments.stream().map(q -> QuizUtils.toQuizDTO(q.getQuiz()))
                 .toList();
     }
 
-    public void submitQuizAnswers(QuizSubmissionRequest quizSubmissionRequest) {
+    public void submitQuizAnswers(UUID quizId, QuizAnswersSubmissionRequest quizAnswersSubmissionRequest) {
         AppUser student =
-                userRepository.findById(quizSubmissionRequest.studentId()).orElseThrow(UserNotFoundException::new);
+                userRepository.findById(quizAnswersSubmissionRequest.studentId()).orElseThrow(UserNotFoundException::new);
         QuizAssignment assignment = quizAssignmentRepository
-                .findByStudentIdAndQuizId(student.getId(), quizSubmissionRequest.quizId())
+                .findByStudentIdAndQuizId(student.getId(), quizId)
                 .orElseThrow(AssignmentNotFoundException::new);
-        for (SubmittedAnswerDTO sa : quizSubmissionRequest.answers()) {
+        for (SubmittedAnswerDTO sa : quizAnswersSubmissionRequest.answers()) {
             QuizQuestion question = quizQuestionRepository.findById(sa.questionId()).orElseThrow();
 
             StudentAnswer studentAnswer = new StudentAnswer();

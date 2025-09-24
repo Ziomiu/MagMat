@@ -1,8 +1,8 @@
 package com.example.tutorApp.utils;
 
-import com.example.tutorApp.dto.QuizAnswerDTO;
-import com.example.tutorApp.dto.QuizDTO;
-import com.example.tutorApp.dto.QuizQuestionDTO;
+import com.example.tutorApp.dto.quiz.QuizAnswerDTO;
+import com.example.tutorApp.dto.quiz.QuizDTO;
+import com.example.tutorApp.dto.quiz.QuizQuestionDTO;
 import com.example.tutorApp.entity.QuestionType;
 import com.example.tutorApp.entity.Quiz;
 import com.example.tutorApp.entity.QuizAnswer;

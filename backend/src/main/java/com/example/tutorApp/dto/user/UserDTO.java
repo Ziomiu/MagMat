@@ -1,4 +1,4 @@
-package com.example.tutorApp.dto;
+package com.example.tutorApp.dto.user;
 
 import com.example.tutorApp.entity.AppUser;
 import com.example.tutorApp.entity.UserRole;

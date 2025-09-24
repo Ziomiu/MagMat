@@ -1,12 +1,16 @@
 package com.example.tutorApp.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class AppUser {
+public class AppUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -31,6 +35,16 @@ public class AppUser {
         this.userRole = userRole;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.userRole.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.id.toString();
+    }
+
     public String getName() {
         return name;
     }
@@ -43,6 +57,7 @@ public class AppUser {
         return email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

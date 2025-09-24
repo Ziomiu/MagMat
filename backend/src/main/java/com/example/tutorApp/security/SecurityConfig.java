@@ -46,16 +46,16 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "user/login",
-                                "user/register",
-                                "user/forgot-password",
-                                "user/reset-password",
-                                "user/logout",
-                                "user/refresh"
+                                "/user/login",
+                                "/user/register",
+                                "/user/forgot-password",
+                                "/user/reset-password",
+                                "/user/logout",
+                                "/user/refresh"
                         ).permitAll()
                         .requestMatchers(
-                                "token/verify-reset",
-                                "token/confirm-email"
+                                "/token/verify-reset",
+                                "/token/confirm-email"
                         ).permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(
@@ -65,21 +65,21 @@ public class SecurityConfig {
                                 "/v3/api-docs.yaml"
                         ).permitAll()
                         .requestMatchers(
-                                "quiz",
-                                "quiz/user/",
-                                "quiz/",
-                                "quiz/assign",
-                                "quiz/student/",
-                                "quiz/submit")
+                                "/quiz",
+                                "/quiz/user/",
+                                "/quiz/",
+                                "/quiz/assign",
+                                "/quiz/student/",
+                                "/quiz/submit")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .requestMatchers(
-                                "teacher/",
-                                "teacher/quiz/",
-                                "teacher/submission/",
-                                "teacher/submission/grade")
+                                "/teacher/",
+                                "/teacher/quiz/",
+                                "/teacher/submission/",
+                                "/teacher/submission/grade")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .requestMatchers(
-                                "student/submissions")
+                                "/student/submissions")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter,

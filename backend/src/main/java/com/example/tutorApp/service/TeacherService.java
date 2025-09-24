@@ -1,34 +1,31 @@
 package com.example.tutorApp.service;
 
-import com.example.tutorApp.dto.AnswerGradeDTO;
-import com.example.tutorApp.dto.StudentAnswerDTO;
-import com.example.tutorApp.dto.SubmissionDetailsDTO;
-import com.example.tutorApp.dto.SubmissionSummaryDTO;
-import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.dto.teacher.GradedAnswerDTO;
+import com.example.tutorApp.dto.teacher.SubmittedStudentAnswerDTO;
+import com.example.tutorApp.dto.teacher.SubmissionDetailsDTO;
+import com.example.tutorApp.dto.teacher.SubmissionSummaryDTO;
 import com.example.tutorApp.entity.QuizAssignment;
 import com.example.tutorApp.entity.StudentAnswer;
 import com.example.tutorApp.repository.QuizAssignmentRepository;
-import com.example.tutorApp.repository.QuizRepository;
 import com.example.tutorApp.repository.StudentAnswerRepository;
 import com.example.tutorApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GradingService {
+public class TeacherService {
     private final QuizAssignmentRepository assignmentRepo;
     private final StudentAnswerRepository answerRepo;
 
-    public GradingService(QuizAssignmentRepository assignmentRepo, StudentAnswerRepository answerRepo, UserRepository userRepo) {
+    public TeacherService(QuizAssignmentRepository assignmentRepo, StudentAnswerRepository answerRepo, UserRepository userRepo) {
         this.assignmentRepo = assignmentRepo;
         this.answerRepo = answerRepo;
     }
 
-    public List<SubmissionSummaryDTO> listSubmissionsForQuiz(UUID quizId) {
+    public List<SubmissionSummaryDTO> getSubmissionsForQuiz(UUID quizId) {
         List<QuizAssignment> assignments = assignmentRepo.findByQuizId(quizId);
         return assignments.stream()
                 .map(a -> new SubmissionSummaryDTO(
@@ -45,8 +42,8 @@ public class GradingService {
         QuizAssignment assignment = assignmentRepo.findById(assignmentId).orElseThrow();
         List<StudentAnswer> answers = answerRepo.findByAssignmentId(assignmentId);
 
-        List<StudentAnswerDTO> answerDtos = answers.stream().map(sa ->
-                new StudentAnswerDTO(
+        List<SubmittedStudentAnswerDTO> answerDTO = answers.stream().map(sa ->
+                new SubmittedStudentAnswerDTO(
                         sa.getId(),
                         sa.getQuestion().getId(),
                         sa.getQuestion().getText(),
@@ -64,14 +61,13 @@ public class GradingService {
                 assignment.getStudent().getId(),
                 assignment.getStudent().getName(),
                 assignment.getStudent().getSurname(),
-                null,
-                answerDtos
+                answerDTO
         );
     }
 
     @Transactional
-    public void gradeSubmission(List<AnswerGradeDTO> grades) {
-        for (AnswerGradeDTO g : grades) {
+    public void gradeSubmissionAnswers(List<GradedAnswerDTO> grades) {
+        for (GradedAnswerDTO g : grades) {
             StudentAnswer sa = answerRepo.findById(g.studentAnswerId())
                     .orElseThrow();
             sa.setCorrect(g.correct());
@@ -79,6 +75,7 @@ public class GradingService {
             answerRepo.save(sa);
         }
     }
+
     public List<SubmissionSummaryDTO> getQuizSubmissions(UUID quizId) {
         return assignmentRepo.findByQuizId(quizId).stream()
                 .map(a -> new SubmissionSummaryDTO(

@@ -1,6 +1,5 @@
 package com.example.tutorApp.security;
 
-import com.example.tutorApp.entity.AppUser;
 import com.example.tutorApp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        AppUser user = userRepository.findById(UUID.fromString(userId))
+        return userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new CustomUserDetails(user);
     }
 }
