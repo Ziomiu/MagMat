@@ -1,4 +1,4 @@
-package com.example.tutorApp.dto;
+package com.example.tutorApp.dto.quiz;
 
 import java.time.LocalDateTime;
 import java.util.List;

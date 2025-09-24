@@ -1,4 +1,4 @@
-package com.example.tutorApp.dto;
+package com.example.tutorApp.dto.quiz;
 
 import java.util.List;
 import java.util.UUID;
