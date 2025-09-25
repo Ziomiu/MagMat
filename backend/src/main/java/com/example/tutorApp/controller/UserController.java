@@ -6,6 +6,7 @@ import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.request.ResetPasswordRequest;
 import com.example.tutorApp.response.LoginResponse;
+import com.example.tutorApp.response.StudentResponse;
 import com.example.tutorApp.service.TokenService;
 import com.example.tutorApp.service.UserService;
 import com.example.tutorApp.utils.JwtUtil;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 
 @RestController
@@ -87,5 +90,10 @@ public class UserController {
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me/{userId}")
+    public ResponseEntity<StudentResponse> getCurrentUser(@PathVariable UUID userId) {
+        return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 }

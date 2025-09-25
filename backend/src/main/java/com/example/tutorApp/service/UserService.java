@@ -6,6 +6,7 @@ import com.example.tutorApp.errors.*;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
+import com.example.tutorApp.response.StudentResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,11 @@ public class UserService {
 
     public AppUser findUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    public StudentResponse getUserInfo(UUID id) {
+        AppUser user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return new StudentResponse(user.getId(), user.getName(), user.getSurname());
     }
 
 }
