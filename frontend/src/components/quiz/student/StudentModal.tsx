@@ -18,7 +18,7 @@ function StudentModal({ open, onClose, quizId }: Props) {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!open) return;
@@ -28,6 +28,10 @@ function StudentModal({ open, onClose, quizId }: Props) {
         setLoading(true);
         const res = await api.get<Student[]>("/student");
         setStudents(res.data);
+        const assignedRes = await api.get<string[]>(
+          `/quiz/${quizId}/assigned-students`,
+        );
+        setSelected(new Set(assignedRes.data));
       } catch (err: any) {
         console.error(err);
         setError("Failed to load students");
@@ -45,15 +49,22 @@ function StudentModal({ open, onClose, quizId }: Props) {
     `${s.name} ${s.surname}`.toLowerCase().includes(search.toLowerCase()),
   );
   const toggleSelect = (id: string) => {
-    console.log(id);
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
-    );
+    setSelected((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   const handleConfirm = async () => {
     try {
-      await api.post(`/quiz/${quizId}/assign`, { studentIds: selected });
+      await api.post(`/quiz/${quizId}/assign`, {
+        studentIds: Array.from(selected),
+      });
       onClose();
     } catch (err: any) {
       console.error("Assignment failed:", err);
@@ -82,7 +93,7 @@ function StudentModal({ open, onClose, quizId }: Props) {
           <ul className="max-h-60 overflow-y-auto space-y-2">
             {filtered.length > 0 ? (
               filtered.map((student) => {
-                const isSelected = selected.includes(student.studentId);
+                const isSelected = selected.has(student.studentId);
                 return (
                   <li
                     key={student.studentId}
@@ -117,7 +128,7 @@ function StudentModal({ open, onClose, quizId }: Props) {
           </button>
           <button
             onClick={handleConfirm}
-            disabled={selected.length === 0}
+            disabled={selected.size === 0}
             className="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50"
           >
             Confirm Assign

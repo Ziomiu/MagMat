@@ -50,7 +50,8 @@ public class SecurityConfig {
                                 "/user/register",
                                 "/user/forgot-password",
                                 "/user/reset-password",
-                                "/user/logout"
+                                "/user/logout",
+                                "/user/me/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/token/verify-reset",
@@ -70,7 +71,8 @@ public class SecurityConfig {
                                 "/quiz/",
                                 "/quiz/assign",
                                 "/quiz/student/",
-                                "/quiz/submit")
+                                "/quiz/submit",
+                                "/quiz/*/assigned-students")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
                         .requestMatchers(
                                 "/teacher/",

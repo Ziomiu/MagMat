@@ -106,4 +106,10 @@ public class QuizService {
         }
 
     }
+
+    public List<UUID> getAssignedStudentIds(UUID quizId) {
+        return quizAssignmentRepository.findByQuizId(quizId).stream()
+                .map(a -> a.getStudent().getId())
+                .toList();
+    }
 }

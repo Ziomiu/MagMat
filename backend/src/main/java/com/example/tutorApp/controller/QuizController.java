@@ -70,5 +70,9 @@ public class QuizController {
         quizService.submitQuizAnswers(id, request);
         return ResponseEntity.ok("");
     }
+    @GetMapping("/{quizId}/assigned-students")
+    public ResponseEntity<List<UUID>> getAssignedStudents(@PathVariable UUID quizId) {
+        return ResponseEntity.ok(quizService.getAssignedStudentIds(quizId));
+    }
 
 }
