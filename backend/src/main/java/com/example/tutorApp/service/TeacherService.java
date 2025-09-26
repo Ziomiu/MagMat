@@ -4,6 +4,7 @@ import com.example.tutorApp.dto.teacher.GradedAnswerDTO;
 import com.example.tutorApp.dto.teacher.SubmittedStudentAnswerDTO;
 import com.example.tutorApp.dto.teacher.SubmissionDetailsDTO;
 import com.example.tutorApp.dto.teacher.SubmissionSummaryDTO;
+import com.example.tutorApp.entity.AnswerStatus;
 import com.example.tutorApp.entity.QuizAssignment;
 import com.example.tutorApp.entity.StudentAnswer;
 import com.example.tutorApp.repository.QuizAssignmentRepository;
@@ -50,7 +51,7 @@ public class TeacherService {
                         sa.getAnswer() != null ? sa.getAnswer().getId() : null,
                         sa.getAnswer() != null ? sa.getAnswer().getText() : null,
                         sa.getTextAnswer(),
-                        sa.getCorrect(),
+                        sa.getAnswerStatus().name(),
                         sa.getComment()
                 )
         ).toList();
@@ -70,7 +71,8 @@ public class TeacherService {
         for (GradedAnswerDTO g : grades) {
             StudentAnswer sa = answerRepo.findById(g.studentAnswerId())
                     .orElseThrow();
-            sa.setCorrect(g.correct());
+            System.out.println(g.answerStatus());
+            sa.setAnswerStatus(AnswerStatus.valueOf(g.answerStatus()));
             sa.setComment(g.comment());
             answerRepo.save(sa);
         }
@@ -83,7 +85,7 @@ public class TeacherService {
                         a.getStudent().getId(),
                         a.getStudent().getName(),
                         a.getStudent().getSurname(),
-                        a.getAnswers().stream().anyMatch(ans -> ans.getCorrect() != null)
+                        a.getAnswers().stream().anyMatch(ans -> ans.getAnswerStatus() != null)
                 ))
                 .toList();
     }

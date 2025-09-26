@@ -39,7 +39,8 @@ public class TokenService {
         EmailVerificationToken emailVerificationToken = new EmailVerificationToken(user);
         verificationRepository.save(emailVerificationToken);
 
-        String link = apiBaseUrl + "/user/confirm-email?token=" + emailVerificationToken.getToken();
+        String link =
+                apiBaseUrl + "/token/confirm-email?token=" + emailVerificationToken.getToken();
         emailService.sendEmail(user.getEmail(), "Confirm your account", "Click here: " + link);
     }
 
@@ -61,7 +62,7 @@ public class TokenService {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFundException(email));
         PasswordResetToken passwordResetToken = new PasswordResetToken(user);
         passwordResetTokenRepository.save(passwordResetToken);
-        String link = appBaseUrl + "/reset-password?token=" + passwordResetToken.getToken();
+        String link = appBaseUrl + "/token/reset-password?token=" + passwordResetToken.getToken();
         emailService.sendEmail(email, "Reset your password", "Click here: " + link);
     }
 

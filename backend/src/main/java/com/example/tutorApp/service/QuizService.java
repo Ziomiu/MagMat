@@ -1,6 +1,7 @@
 package com.example.tutorApp.service;
 
 import com.example.tutorApp.dto.quiz.QuizDTO;
+import com.example.tutorApp.dto.student.AssignedQuizDTO;
 import com.example.tutorApp.entity.*;
 import com.example.tutorApp.errors.AssignmentNotFoundException;
 import com.example.tutorApp.errors.QuizNotFound;
@@ -73,9 +74,18 @@ public class QuizService {
         }
     }
 
-    public List<QuizDTO> getAssignedQuizzes(UUID studentId) {
+    public List<AssignedQuizDTO> getAssignedQuizzes(UUID studentId) {
         List<QuizAssignment> assignments = quizAssignmentRepository.findByStudentId(studentId);
-        return assignments.stream().map(q -> QuizUtils.toQuizDTO(q.getQuiz()))
+        return assignments.stream().map(q -> {
+                    Quiz quiz = q.getQuiz();
+                    return new AssignedQuizDTO(
+                            quiz.getId(),
+                            quiz.getTitle(),
+                            quiz.getDescription(),
+                            quiz.getStartDate(),
+                            quiz.getEndDate(),
+                            q.getCompleted());
+                })
                 .toList();
     }
 
@@ -91,7 +101,7 @@ public class QuizService {
             StudentAnswer studentAnswer = new StudentAnswer();
             studentAnswer.setAssignment(assignment);
             studentAnswer.setQuestion(question);
-
+            studentAnswer.setAnswerStatus(AnswerStatus.PENDING);
             if (sa.answerId() != null) {
                 QuizAnswer answer = quizAnswerRepository.findById(sa.answerId()).orElseThrow();
                 studentAnswer.setAnswer(answer);
