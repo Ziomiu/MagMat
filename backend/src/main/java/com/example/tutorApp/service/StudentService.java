@@ -32,7 +32,7 @@ public class StudentService {
                         a.getId(),
                         a.getQuiz().getId(),
                         a.getQuiz().getTitle(),
-                        a.getAnswers().stream().anyMatch(ans -> ans.getCorrect() != null)
+                        a.getAnswers().stream().allMatch(ans -> ans.getAnswerStatus() != AnswerStatus.PENDING)
                 ))
                 .toList();
     }
@@ -61,7 +61,7 @@ public class StudentService {
                     sa.getQuestion().getText(),
                     studentAnswerText,
                     correctAnswerText,
-                    sa.getCorrect(),
+                    sa.getAnswerStatus().name(),
                     sa.getComment()
             );
         }).toList();

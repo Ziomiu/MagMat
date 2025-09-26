@@ -8,5 +8,5 @@ public record SubmittedStudentAnswerDTO(UUID id,
                                         UUID selectedAnswerId,
                                         String selectedAnswerText,
                                         String textAnswer,
-                                        Boolean correct,
+                                        String answerStatus,
                                         String comment) {}

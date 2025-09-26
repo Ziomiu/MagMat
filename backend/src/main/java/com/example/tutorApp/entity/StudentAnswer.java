@@ -23,7 +23,8 @@ public class StudentAnswer {
     private QuizAnswer answer;
 
     private String textAnswer;
-    private Boolean correct;
+    @Enumerated(EnumType.STRING)
+    private AnswerStatus answerStatus;
     private String comment;
 
     public UUID getId() {
@@ -70,11 +71,11 @@ public class StudentAnswer {
         this.comment = comment;
     }
 
-    public Boolean getCorrect() {
-        return correct;
+    public AnswerStatus getAnswerStatus() {
+        return answerStatus;
     }
 
-    public void setCorrect(Boolean correct) {
-        this.correct = correct;
+    public void setAnswerStatus(AnswerStatus answerStatus) {
+        this.answerStatus = answerStatus;
     }
 }
