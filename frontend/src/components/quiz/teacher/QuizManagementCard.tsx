@@ -67,12 +67,6 @@ function QuizManagementCard({ quiz, setQuizzes }: Props) {
         >
           Assign
         </button>
-        <Link
-          to={`/teacher/quiz/${quiz.id}/submissions`}
-          className="bg-blue-500 px-3 py-1 rounded text-white hover:bg-blue-600"
-        >
-          See Submissions
-        </Link>
       </div>
       <div className="text-sm text-red-700">{error}</div>
       <StudentModal

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Question, Answer } from "../types";
 import AnswerList from "../answer/AnswerList";
-
+import { v4 as uuidv4 } from "uuid";
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -12,7 +12,7 @@ type Props = {
 function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
   const [localQuestion, setLocalQuestion] = useState<Question>(
     initialQuestion ?? {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       type: "SINGLE",
       text: "",
       answers: [],
@@ -24,7 +24,7 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
   const addAnswer = () => {
     if (localQuestion.answers.length >= 6) return;
     const newAnswer: Answer = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       text: "",
       correct: false,
     };
@@ -56,7 +56,7 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-50" onClick={onClose} />
-      <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-w-lg z-10 flex flex-col max-h-[90vh]">
+      <div className="relative bg-white rounded-lg shadow-lg p-4 w-full max-w-lg z-10 flex flex-col max-h-[90vh]">
         <h2 className="text-xl font-semibold mb-4">
           {initialQuestion ? "Edit Question" : "Add Question"}
         </h2>

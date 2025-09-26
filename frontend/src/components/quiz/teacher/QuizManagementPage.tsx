@@ -29,8 +29,8 @@ const QuizManagementPage = () => {
     return;
   }
   return (
-    <>
-      <div className="flex p-3 justify-between items-center mb-4 border-b">
+    <div className="flex flex-col h-full">
+      <div className="flex p-3 justify-between items-center border-b bg-background z-10">
         <h1 className="text-2xl font-bold">Your Quizzes</h1>
         <Link
           to="/quiz/create"
@@ -39,8 +39,11 @@ const QuizManagementPage = () => {
           Create Quiz
         </Link>
       </div>
-      <QuizManagementList quizzes={quizzes} setQuizzes={setQuizzes} />
-    </>
+
+      <div className="flex-1 overflow-y-auto">
+        <QuizManagementList quizzes={quizzes} setQuizzes={setQuizzes} />
+      </div>
+    </div>
   );
 };
 
