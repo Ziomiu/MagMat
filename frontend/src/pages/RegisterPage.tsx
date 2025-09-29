@@ -21,6 +21,8 @@ function RegisterPage() {
   const [error, setError] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +31,10 @@ function RegisterPage() {
     setError("");
     if (!userName || !userSurname || !userEmail || !userPassword) {
       setError("All fields are required.");
+      return;
+    }
+    if (userPassword != confirmPassword) {
+      setError("Passwords doesn't match");
       return;
     }
     setLoading(true);
@@ -73,13 +79,13 @@ function RegisterPage() {
         {isRegistered ? (
           <CardContent className="flex flex-col gap-4 text-center">
             <p>
-              🎉 Signing up complete! Check your email to verify the account.
+              Rejestracja zakończona! Sprawdź swój email aby zweryfikować konto.
             </p>
             <button
               className="mb-3 inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
               onClick={() => navigate("/login")}
             >
-              Return to sign in
+              Powrót do logowania
             </button>
           </CardContent>
         ) : (
@@ -87,14 +93,14 @@ function RegisterPage() {
             <CardContent className="flex flex-col gap-4">
               <Input
                 type="text"
-                label="Name"
+                label="Imie"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 required
               />
               <Input
                 type="text"
-                label="Surname"
+                label="Nazwisko"
                 value={userSurname}
                 onChange={(e) => setUserSurname(e.target.value)}
                 required
@@ -109,7 +115,7 @@ function RegisterPage() {
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  label="Password"
+                  label="Hasło"
                   value={userPassword}
                   onChange={(e) => setUserPassword(e.target.value)}
                   required
@@ -124,16 +130,42 @@ function RegisterPage() {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  label="Potwierdź Hasło"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  maxLength={32}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className="absolute right-3 inset-y-0 top-6 text-gray-500"
+                  onClick={() => setShowConfirmPassword((v) => !v)}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               {error && <div className="text-sm text-red-700">{error}</div>}
             </CardContent>
 
-            <CardFooter className="flex my-3">
+            <CardFooter className="flex my-3 justify-between">
               <button
                 type="submit"
                 className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
                 disabled={loading}
               >
-                {loading ? "Signing up..." : "Sign up"}
+                {loading ? "Rejestracja..." : "Zarejestruj się"}
+              </button>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => navigate("/login")}
+                className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"
+              >
+                Powrót do logowania
               </button>
             </CardFooter>
           </form>

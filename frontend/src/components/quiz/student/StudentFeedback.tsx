@@ -84,10 +84,14 @@ function StudentFeedback() {
               <span className="font-medium">Your answer:</span>{" "}
               {ans.studentAnswerText ?? "-"}
             </div>
-            <div className="mb-1">
-              <span className="font-medium">Correct answer:</span>{" "}
-              {ans.correctAnswerText ?? "-"}
-            </div>
+            {ans.correctAnswerText ? (
+              <div className="mb-1">
+                <span className="font-medium">Correct answer:</span>{" "}
+                {ans.correctAnswerText}
+              </div>
+            ) : (
+              ""
+            )}
 
             {ans.teacherComment && (
               <div className="text-sm text-gray-700 italic">

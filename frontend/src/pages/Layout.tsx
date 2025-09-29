@@ -5,7 +5,7 @@ import { IoIosMenu } from "react-icons/io";
 import Sidebar from "../components/Sidebar.tsx";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../context/UseAuth.tsx";
-
+import logo from "../assets/logo.png";
 interface NavItem {
   name: string;
   path: string;
@@ -65,8 +65,10 @@ const Layout: React.FC = () => {
         >
           <IoIosMenu size={24} />
         </button>
-        <h1 className="text-lg font-bold">Tutor App</h1>
-        <div>Account</div>
+        <h1 className="text-lg font-bold">MagMat</h1>
+        <div>
+          <img src={logo} height="32" width="32" />
+        </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
         <Sidebar isOpen={isOpen} navItems={navItems} />
