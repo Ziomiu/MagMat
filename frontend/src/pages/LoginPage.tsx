@@ -63,7 +63,7 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Log in</CardTitle>
+          <CardTitle className="text-center text-2xl">Login</CardTitle>
         </CardHeader>
         <form onSubmit={onSubmit}>
           <CardContent className="flex flex-col gap-4">
@@ -73,11 +73,13 @@ function LoginPage() {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               required={true}
+              name="email"
+              autoComplete="email"
             />
             <div className=" relative">
               <Input
                 type={showPassword ? "text" : "password"}
-                label="Password"
+                label="Hasło"
                 value={userPassword}
                 onChange={(e) => setUserPassword(e.target.value)}
                 required
@@ -102,23 +104,23 @@ function LoginPage() {
                 type="submit"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
               >
-                Sign in
+                Zaloguj się
               </button>
               <button
                 onClick={() => navigate("/register")}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90"
               >
-                Sign up
+                Rejestracja
               </button>
             </div>
-            <p className="text-sm text-gray-600 ">
-              Forgot{" "}
+            <p className=" text-gray-600">
+              Zapomniałeś{" "}
               <button
                 type="button"
                 className="text-primary hover:underline hover:cursor-pointer"
                 onClick={() => navigate("/forgot-password")}
               >
-                password?
+                hasła?
               </button>
             </p>
           </CardFooter>

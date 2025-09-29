@@ -46,12 +46,7 @@ function SubmissionsList() {
             >
               <div>
                 <div className="font-semibold">{s.quizTitle}</div>
-                <div className="text-sm text-gray-500">
-                  Submitted:{" "}
-                  {s.submittedAt
-                    ? new Date(s.submittedAt).toLocaleString()
-                    : "—"}
-                </div>
+
                 <div className="text-sm">
                   Status:{" "}
                   {s.graded ? (

@@ -21,15 +21,19 @@ function QuizTakingForm() {
   const [answers, setAnswers] = useState<Record<string, SubmissionAnswer[]>>(
     {},
   );
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     api
-      .get(`/quiz/${id}`)
+      .get(`/student/${userId}/quiz/${id}`)
       .then((res) => setQuiz(res.data))
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        setError(err.response.data);
+        console.log(err);
+      })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, userId]);
 
   const currentQuestion = quiz?.questions[currentIndex];
 
@@ -61,104 +65,170 @@ function QuizTakingForm() {
   };
 
   const handleSubmit = async () => {
+    const submission = {
+      quizId: id,
+      studentId: userId,
+      answers: Object.values(answers).flat(),
+    };
+    console.log(submission);
     if (!quiz) return;
     try {
       const submission = {
+        quizId: id,
         studentId: userId,
         answers: Object.values(answers).flat(),
       };
-      await api.post(`/quiz/${quiz.id}/submit`, submission);
+      console.log(submission);
+      await api.post(`/quiz/submit`, submission);
       alert("Quiz submitted successfully!");
-      navigate("/student/quiz/take");
+      navigate("/quiz/take");
+      await api.post(`/quiz/${quiz.id}/submit`, submission);
+      setSubmitted(true);
     } catch (err) {
       console.error(err);
       setError("Failed to submit quiz");
     }
   };
+  const isAnswered = (questionId: string) => {
+    if (questionId) {
+      const ans = answers[questionId];
+      if (!ans || ans.length === 0) return false;
 
-  if (loading) return <p>Loading quiz...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-  if (!quiz) return <p>Quiz not found</p>;
+      if (ans[0].textAnswer) {
+        return ans[0].textAnswer.trim().length > 0;
+      }
+
+      return ans.some((a) => a.answerId !== null);
+    }
+  };
+
+  if (loading) return <p className="text-center mt-10">Loading quiz...</p>;
+  if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
+  if (!quiz) return <p className="text-center mt-10">Quiz not found</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">{quiz.title}</h1>
-      <p className="text-gray-500 mb-6">{quiz.description}</p>
+    <div className="min-h-full flex items-center justify-center bg-gray-100 p-6">
+      <div className="bg-white shadow-lg rounded-2xl w-full max-w-2xl p-8">
+        <h1 className="text-3xl font-bold mb-2 text-center">{quiz.title}</h1>
+        <p className="text-gray-500 mb-6 text-center">{quiz.description}</p>
 
-      {currentQuestion && (
-        <div>
-          <h2 className="text-lg font-semibold mb-3">
-            Q{currentIndex + 1}. {currentQuestion.text}
-          </h2>
-
-          {currentQuestion.type === "SINGLE" &&
-            currentQuestion.answers.map((a) => (
-              <label key={a.id} className="block mb-2">
-                <input
-                  type="radio"
-                  name={currentQuestion.id}
-                  checked={answers[currentQuestion.id]?.[0]?.answerId === a.id}
-                  onChange={() => handleSingleChoice(currentQuestion.id, a.id)}
-                />{" "}
-                {a.text}
-              </label>
-            ))}
-
-          {currentQuestion.type === "MULTIPLE" &&
-            currentQuestion.answers.map((a) => (
-              <label key={a.id} className="block mb-2">
-                <input
-                  type="checkbox"
-                  checked={
-                    answers[currentQuestion.id]?.some(
-                      (ans) => ans.answerId === a.id,
-                    ) ?? false
-                  }
-                  onChange={() =>
-                    handleMultipleChoice(currentQuestion.id, a.id)
-                  }
-                />{" "}
-                {a.text}
-              </label>
-            ))}
-
-          {currentQuestion.type === "OPEN" && (
-            <textarea
-              className="w-full border rounded p-2"
-              value={answers[currentQuestion.id]?.[0]?.textAnswer || ""}
-              onChange={(e) =>
-                handleOpenAnswer(currentQuestion.id, e.target.value)
-              }
-              placeholder="Type your answer here..."
-            />
-          )}
-        </div>
-      )}
-
-      <div className="flex justify-between mt-6">
-        <button
-          className="bg-gray-300 px-4 py-2 rounded"
-          onClick={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
-          disabled={currentIndex === 0}
-        >
-          Previous
-        </button>
-        {currentIndex < quiz.questions.length - 1 ? (
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-            onClick={() =>
-              setCurrentIndex((i) => Math.min(i + 1, quiz.questions.length - 1))
-            }
-          >
-            Next
-          </button>
+        {submitted ? (
+          <div className="text-center py-10">
+            <h2 className="text-2xl font-bold text-green-600 mb-4">
+              Quiz Completed!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Thank you for submitting your answers.
+            </p>
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              onClick={() => navigate("/student/quiz/take")}
+            >
+              Back to Quizzes
+            </button>
+          </div>
         ) : (
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          currentQuestion && (
+            <>
+              <div className="flex justify-between items-center mb-6 text-sm text-gray-600">
+                <span>
+                  Question {currentIndex + 1} of {quiz.questions.length}
+                </span>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold mb-4">
+                  {currentQuestion.text}
+                </h2>
+
+                <div className="space-y-3">
+                  {currentQuestion.type === "SINGLE" &&
+                    currentQuestion.answers.map((a) => (
+                      <label
+                        key={a.id}
+                        className="flex items-center space-x-2 border rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition"
+                      >
+                        <input
+                          type="radio"
+                          name={currentQuestion.id}
+                          checked={
+                            answers[currentQuestion.id]?.[0]?.answerId === a.id
+                          }
+                          onChange={() =>
+                            handleSingleChoice(currentQuestion.id, a.id)
+                          }
+                        />
+                        <span>{a.text}</span>
+                      </label>
+                    ))}
+
+                  {currentQuestion.type === "MULTIPLE" &&
+                    currentQuestion.answers.map((a) => (
+                      <label
+                        key={a.id}
+                        className="flex items-center space-x-2 border rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            answers[currentQuestion.id]?.some(
+                              (ans) => ans.answerId === a.id,
+                            ) ?? false
+                          }
+                          onChange={() =>
+                            handleMultipleChoice(currentQuestion.id, a.id)
+                          }
+                        />
+                        <span>{a.text}</span>
+                      </label>
+                    ))}
+
+                  {currentQuestion.type === "OPEN" && (
+                    <textarea
+                      className="w-full border rounded-lg p-3 focus:ring focus:ring-blue-300"
+                      rows={4}
+                      value={answers[currentQuestion.id]?.[0]?.textAnswer || ""}
+                      onChange={(e) =>
+                        handleOpenAnswer(currentQuestion.id, e.target.value)
+                      }
+                      placeholder="Type your answer here..."
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-between mt-8">
+                <button
+                  className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg disabled:opacity-50"
+                  onClick={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
+                  disabled={currentIndex === 0}
+                >
+                  Previous
+                </button>
+
+                {currentIndex < quiz.questions.length - 1 ? (
+                  <button
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                    onClick={() =>
+                      setCurrentIndex((i) =>
+                        Math.min(i + 1, quiz.questions.length - 1),
+                      )
+                    }
+                    disabled={!isAnswered(currentQuestion.id)}
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                    onClick={handleSubmit}
+                    disabled={!isAnswered(currentQuestion.id)}
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+            </>
+          )
         )}
       </div>
     </div>

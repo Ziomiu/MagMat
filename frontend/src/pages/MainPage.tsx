@@ -51,23 +51,17 @@ function MainPage() {
 
   return (
     <main className=" flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-lg p-8 md:p-12">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-          <div className="flex-shrink-0">
+      <div className="max-w-4xl w-full bg-white rounded-xl p-8 md:p-12 shadow-xl">
+        <div className="flex md:flex-row items-start md:items-center gap-6">
+          <div className=" items-center justify-between flex">
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
               {profile?.name ? profile.name.charAt(0).toUpperCase() : "U"}
             </div>
-          </div>
-
-          <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
-              {firstLine}
-            </h1>
-            <p className="text-gray-600 mb-4">
-              {
-                "To prosta aplikacja do rozwiązywania quizów z różnych zagadnień"
-              }
-            </p>
+            <div className="ml-2">
+              <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
+                {firstLine}
+              </h1>
+            </div>
           </div>
         </div>
       </div>

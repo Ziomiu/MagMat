@@ -23,19 +23,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems }) => {
     ${isOpen ? "w-64" : "w-0"}
      overflow-hidden flex flex-col `}
     >
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-hidden">
         <nav className="p-4 space-y-2">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
+                `flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition whitespace-nowrap ${
                   isActive ? "border shadow-xl" : ""
                 }`
               }
             >
               {item.icon}
+
               {item.name}
             </NavLink>
           ))}
