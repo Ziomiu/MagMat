@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
             SameAsOldPasswordException.class,
             UserNotFoundException.class,
             AssignmentNotFoundException.class,
+            QuizAlreadyCompletedException.class
     })
     public ResponseEntity<String> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

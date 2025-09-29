@@ -1,5 +1,6 @@
 package com.example.tutorApp.controller;
 
+import com.example.tutorApp.dto.quiz.QuizDTO;
 import com.example.tutorApp.dto.student.StudentSubmissionFeedbackDTO;
 import com.example.tutorApp.dto.student.StudentSubmissionDTO;
 import com.example.tutorApp.response.StudentResponse;
@@ -37,6 +38,12 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<StudentResponse>> getAllStudents() {
         return ResponseEntity.ok(studentService.findAllStudents());
+    }
+
+    @GetMapping("/{userId}/quiz/{quizId}")
+    public ResponseEntity<QuizDTO> getAssignedQuiz(@PathVariable UUID userId,
+                                                   @PathVariable UUID quizId) {
+        return ResponseEntity.ok(studentService.getAssignedQuiz(userId, quizId));
     }
 
 }
