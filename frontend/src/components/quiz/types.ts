@@ -37,7 +37,7 @@ export type StudentAnswerDto = {
   selectedAnswerId?: string | null;
   selectedAnswerText?: string | null;
   textAnswer?: string | null;
-  correct?: boolean | null;
+  answerStatus: AnswerStatus | null;
   comment?: string | null;
 };
 
@@ -62,7 +62,7 @@ export type StudentFeedbackAnswer = {
   questionText: string;
   studentAnswerText: string | null;
   correctAnswerText: string | null;
-  correct: boolean | null;
+  answerStatus: AnswerStatus | null;
   teacherComment: string | null;
 };
 
@@ -72,10 +72,12 @@ export type StudentFeedbackSubmission = {
   quizTitle: string;
   answers: StudentFeedbackAnswer[];
 };
-export type QuizSubmissionSummary = {
-  submissionId: string;
-  studentId: string;
-  studentName: string;
-  studentSurname: string;
+export type AssignedQuiz = {
+  id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
   completed: boolean;
 };
+export type AnswerStatus = "CORRECT" | "WRONG" | "PARTIAL" | "PENDING";

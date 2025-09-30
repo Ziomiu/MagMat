@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../libs/api";
 import { useParams, useNavigate } from "react-router-dom";
-import type { StudentFeedbackSubmission } from "../types";
+import type { StudentFeedbackSubmission, AnswerStatus } from "../types";
 import { useAuth } from "../../../context/UseAuth.tsx";
 
 function StudentFeedback() {
@@ -22,6 +22,7 @@ function StudentFeedback() {
           `/student/${userId}/submission/${submissionId}/feedback`,
         );
         setFeedback(res.data);
+        console.log(res.data);
       } catch (err: any) {
         console.error(err);
         setError("Failed to load feedback");
@@ -30,6 +31,36 @@ function StudentFeedback() {
       }
     })();
   }, [submissionId]);
+
+  const getResultText = (status: AnswerStatus | null) => {
+    switch (status) {
+      case "CORRECT":
+        return "Correct";
+      case "WRONG":
+        return "Incorrect";
+      case "PARTIAL":
+        return "Partially correct";
+      case "PENDING":
+      case null:
+      default:
+        return "Not graded yet";
+    }
+  };
+
+  const getBorderColor = (status: AnswerStatus | null) => {
+    switch (status) {
+      case "CORRECT":
+        return "border-green-500 bg-green-50";
+      case "WRONG":
+        return "border-red-500 bg-red-50";
+      case "PARTIAL":
+        return "border-yellow-400 bg-yellow-50";
+      case "PENDING":
+      case null:
+      default:
+        return "border-gray-300 bg-gray-50";
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -45,11 +76,7 @@ function StudentFeedback() {
         {feedback.answers.map((ans) => (
           <div
             key={ans.questionId}
-            className={`border p-4 rounded ${
-              ans.correct === true
-                ? "border-green-500 bg-green-50"
-                : "border-red-500 bg-red-50"
-            }`}
+            className={`border p-4 rounded ${getBorderColor(ans.answerStatus)}`}
           >
             <div className="font-semibold mb-1">{ans.questionText}</div>
 
@@ -57,10 +84,14 @@ function StudentFeedback() {
               <span className="font-medium">Your answer:</span>{" "}
               {ans.studentAnswerText ?? "-"}
             </div>
-            <div className="mb-1">
-              <span className="font-medium">Correct answer:</span>{" "}
-              {ans.correctAnswerText ?? "-"}
-            </div>
+            {ans.correctAnswerText ? (
+              <div className="mb-1">
+                <span className="font-medium">Correct answer:</span>{" "}
+                {ans.correctAnswerText}
+              </div>
+            ) : (
+              ""
+            )}
 
             {ans.teacherComment && (
               <div className="text-sm text-gray-700 italic">
@@ -69,12 +100,7 @@ function StudentFeedback() {
             )}
 
             <div className="mt-1 font-medium">
-              Result:{" "}
-              {ans.correct === true
-                ? "Correct"
-                : ans.correct === false
-                  ? "Incorrect"
-                  : "Not graded yet"}
+              Result: {getResultText(ans.answerStatus)}
             </div>
           </div>
         ))}

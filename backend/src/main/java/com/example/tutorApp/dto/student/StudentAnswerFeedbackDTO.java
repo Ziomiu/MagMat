@@ -7,7 +7,7 @@ public record StudentAnswerFeedbackDTO(
         String questionText,
         String studentAnswerText,
         String correctAnswerText,
-        Boolean correct,
+        String answerStatus,
         String teacherComment
 ) {
 }

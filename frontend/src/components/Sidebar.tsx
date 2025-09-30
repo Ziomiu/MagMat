@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems, onClose }) => {
       sm:static sm:translate-x-0 sm:w-64
       flex flex-col`}
     >
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-hidden">
         <nav className="p-4 space-y-2">
           {navItems.map((item) => (
             <NavLink
@@ -36,12 +36,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems, onClose }) => {
                 if (onClose && isMobile()) onClose();
               }}
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
+                `flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition whitespace-nowrap ${
                   isActive ? "border shadow-xl" : ""
                 }`
               }
             >
               {item.icon}
+
               {item.name}
             </NavLink>
           ))}

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../libs/api";
 import { useParams, useNavigate } from "react-router-dom";
-import type { SubmissionDetailDto, StudentAnswerDto } from "../types";
+import type {
+  SubmissionDetailDto,
+  StudentAnswerDto,
+  AnswerStatus,
+} from "../types";
 
 function SubmissionDetail() {
   const { submissionId } = useParams<{ submissionId: string }>();
@@ -12,6 +16,13 @@ function SubmissionDetail() {
   const [error, setError] = useState<string | null>(null);
   const [localAnswers, setLocalAnswers] = useState<StudentAnswerDto[]>([]);
   const navigate = useNavigate();
+
+  const statusOrder: AnswerStatus[] = [
+    "PENDING",
+    "CORRECT",
+    "PARTIAL",
+    "WRONG",
+  ];
 
   useEffect(() => {
     if (!submissionId) return;
@@ -31,9 +42,18 @@ function SubmissionDetail() {
     })();
   }, [submissionId]);
 
+  const cycleStatus = (current: AnswerStatus | null): AnswerStatus => {
+    const index = current ? statusOrder.indexOf(current) : 0;
+    return statusOrder[(index + 1) % statusOrder.length];
+  };
+
   const toggleCorrect = (answerId: string) => {
     setLocalAnswers((prev) =>
-      prev.map((a) => (a.id === answerId ? { ...a, correct: !a.correct } : a)),
+      prev.map((a) =>
+        a.id === answerId
+          ? { ...a, answerStatus: cycleStatus(a.answerStatus) }
+          : a,
+      ),
     );
   };
 
@@ -47,10 +67,11 @@ function SubmissionDetail() {
     if (!submission) return;
     const grades = localAnswers.map((a) => ({
       studentAnswerId: a.id,
-      correct: !!a.correct,
+      answerStatus: a.answerStatus,
       comment: a.comment ?? "",
     }));
     try {
+      console.log(grades);
       await api.post(`/teacher/submission/grade`, { grades });
       alert("Grading saved");
       navigate(-1);
@@ -91,10 +112,18 @@ function SubmissionDetail() {
 
             <div className="flex items-center gap-4 mt-2">
               <button
-                className={`px-3 py-1 rounded ${ans.correct ? "bg-green-500 text-white" : "bg-gray-200"}`}
+                className={`px-3 py-1 rounded ${
+                  ans.answerStatus === "CORRECT"
+                    ? "bg-green-500 text-white"
+                    : ans.answerStatus === "WRONG"
+                      ? "bg-red-500 text-white"
+                      : ans.answerStatus === "PARTIAL"
+                        ? "bg-yellow-400 text-white"
+                        : "bg-gray-200"
+                }`}
                 onClick={() => toggleCorrect(ans.id)}
               >
-                {ans.correct ? "Marked correct" : "Mark correct"}
+                {ans.answerStatus ?? "PENDING"}
               </button>
 
               <input

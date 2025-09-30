@@ -1,13 +1,18 @@
 package com.example.tutorApp.service;
 
+import com.example.tutorApp.dto.quiz.QuizDTO;
 import com.example.tutorApp.dto.student.StudentAnswerFeedbackDTO;
 import com.example.tutorApp.dto.student.StudentSubmissionFeedbackDTO;
 import com.example.tutorApp.dto.student.StudentSubmissionDTO;
 import com.example.tutorApp.entity.*;
+import com.example.tutorApp.errors.AssignmentNotFoundException;
+import com.example.tutorApp.errors.QuizAlreadyCompletedException;
+import com.example.tutorApp.errors.QuizNotFound;
 import com.example.tutorApp.repository.QuizAssignmentRepository;
 import com.example.tutorApp.repository.StudentAnswerRepository;
 import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.response.StudentResponse;
+import com.example.tutorApp.utils.QuizUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +37,7 @@ public class StudentService {
                         a.getId(),
                         a.getQuiz().getId(),
                         a.getQuiz().getTitle(),
-                        a.getAnswers().stream().anyMatch(ans -> ans.getCorrect() != null)
+                        a.getAnswers().stream().allMatch(ans -> ans.getAnswerStatus() != AnswerStatus.PENDING)
                 ))
                 .toList();
     }
@@ -61,7 +66,7 @@ public class StudentService {
                     sa.getQuestion().getText(),
                     studentAnswerText,
                     correctAnswerText,
-                    sa.getCorrect(),
+                    sa.getAnswerStatus().name(),
                     sa.getComment()
             );
         }).toList();
@@ -78,5 +83,16 @@ public class StudentService {
         List<AppUser> users = userRepo.findByUserRoleEquals(UserRole.STUDENT);
         return users.stream().map(user -> new StudentResponse(user.getId(), user.getName(),
                 user.getSurname())).toList();
+    }
+
+    public QuizDTO getAssignedQuiz(UUID userId,UUID quizId) {
+        QuizAssignment quizAssignment =
+                assignmentRepo.findByStudentIdAndQuizId(userId,quizId).orElseThrow(AssignmentNotFoundException::new);
+        if (!quizAssignment.getCompleted()) {
+            return QuizUtils.toQuizDTO(quizAssignment.getQuiz());
+        } else {
+            throw new QuizAlreadyCompletedException();
+        }
+
     }
 }

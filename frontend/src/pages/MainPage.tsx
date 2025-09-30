@@ -57,7 +57,7 @@ function MainPage() {
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
               {profile?.name ? profile.name.charAt(0).toUpperCase() : "U"}
             </div>
-            <div>
+            <div className="ml-2">
               <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
                 {firstLine}
               </h1>
