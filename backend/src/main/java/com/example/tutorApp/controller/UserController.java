@@ -51,6 +51,7 @@ public class UserController {
                 .httpOnly(true)
                 .path("/token/refresh")
                 .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Lax")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         LoginResponse loginResponse = new LoginResponse(accessToken);
@@ -86,6 +87,7 @@ public class UserController {
                 .httpOnly(true)
                 .path("/token/refresh")
                 .maxAge(0)
+                .sameSite("Lax")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 

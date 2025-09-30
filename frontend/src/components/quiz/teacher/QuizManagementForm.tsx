@@ -6,6 +6,7 @@ import QuestionModal from "../question/QuestionModal.tsx";
 import { api } from "../../../libs/api.ts";
 import axios from "axios";
 import { useAuth } from "../../../context/UseAuth.tsx";
+import { v4 as uuidv4 } from "uuid";
 
 function QuizManagementForm() {
   const { userId } = useAuth();
@@ -236,7 +237,7 @@ function QuizManagementForm() {
         </button>
       </div>
       <QuestionModal
-        key={editingQuestion ? editingQuestion.id : crypto.randomUUID()}
+        key={editingQuestion ? editingQuestion.id : uuidv4()}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSave={handleSaveQuestion}

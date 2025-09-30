@@ -60,7 +60,7 @@ const Layout: React.FC = () => {
     <div className="flex flex-col h-screen">
       <header className="flex items-center justify-between bg-foreground text-secondary p-4 shadow">
         <button
-          className="p-2 rounded hover:bg-gray-700"
+          className="p-2 rounded hover:bg-gray-700 sm:hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
           <IoIosMenu size={24} />
@@ -71,8 +71,20 @@ const Layout: React.FC = () => {
         </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar isOpen={isOpen} navItems={navItems} />
-        <main className="flex-1 bg-background overflow-auto">
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+        <Sidebar
+          isOpen={isOpen}
+          navItems={navItems}
+          onClose={() => {
+            setIsOpen(false);
+          }}
+        />
+        <main className="flex-1 bg-background overflow-y-auto">
           <Outlet />
         </main>
       </div>
