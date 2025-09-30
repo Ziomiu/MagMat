@@ -48,6 +48,7 @@ function MainPage() {
     if (isAuthenticated) return "Witaj!";
     return "Witaj w aplikacji";
   })();
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <main className=" flex items-center justify-center p-6">
