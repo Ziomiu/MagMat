@@ -83,6 +83,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/student/submissions")
                         .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                        .requestMatchers("/test")
+                        .permitAll()
                         .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class)
@@ -95,7 +97,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://192.168.55.100:5173"));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
