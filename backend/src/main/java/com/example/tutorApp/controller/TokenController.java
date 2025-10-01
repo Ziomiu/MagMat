@@ -42,15 +42,15 @@ public class TokenController {
         return ResponseEntity.ok("Account verified");
     }
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
+    public ResponseEntity<LoginResponse> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
         if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String username = jwtUtil.extractUserId(refreshToken);
-        AppUser user = userService.findUserById(UUID.fromString(username));
+        String userId = jwtUtil.extractUserId(refreshToken);
+        AppUser user = userService.findUserById(UUID.fromString(userId));
         String accessToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getUserRole().name());
-        LoginResponse loginResponse = new LoginResponse(accessToken);
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(new LoginResponse(accessToken));
     }
+
 }

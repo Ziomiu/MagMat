@@ -19,6 +19,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.UUID;
 
 
@@ -41,22 +42,24 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,
                                                HttpServletResponse response) {
-        logger.debug("Attempting to log in user: {}", loginRequest);
         AppUser user = userService.loginUser(loginRequest);
         String accessToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getUserRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-                .secure(false)
                 .httpOnly(true)
-                .path("/token/refresh")
-                .maxAge(7 * 24 * 60 * 60)
-                .sameSite("Lax")
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .sameSite("None")
+                .domain("magmat-n7bg.onrender.com")
                 .build();
+
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        LoginResponse loginResponse = new LoginResponse(accessToken);
-        return ResponseEntity.ok(loginResponse);
+
+        return ResponseEntity.ok(new LoginResponse(accessToken));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
@@ -83,16 +86,19 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
-                .secure(false)
                 .httpOnly(true)
-                .path("/token/refresh")
+                .secure(true)
+                .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite("None")
+                .domain("magmat-n7bg.onrender.com")
                 .build();
+
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
 
         return ResponseEntity.ok().build();
     }
+
 
     @GetMapping("/me/{userId}")
     public ResponseEntity<StudentResponse> getCurrentUser(@PathVariable UUID userId) {
