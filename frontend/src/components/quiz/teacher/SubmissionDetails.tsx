@@ -71,9 +71,7 @@ function SubmissionDetail() {
       comment: a.comment ?? "",
     }));
     try {
-      console.log(grades);
       await api.post(`/teacher/submission/grade`, { grades });
-      alert("Grading saved");
       navigate(-1);
     } catch (err: any) {
       console.error(err);

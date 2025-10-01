@@ -65,12 +65,6 @@ function QuizTakingForm() {
   };
 
   const handleSubmit = async () => {
-    const submission = {
-      quizId: id,
-      studentId: userId,
-      answers: Object.values(answers).flat(),
-    };
-    console.log(submission);
     if (!quiz) return;
     try {
       const submission = {
@@ -78,10 +72,6 @@ function QuizTakingForm() {
         studentId: userId,
         answers: Object.values(answers).flat(),
       };
-      console.log(submission);
-      await api.post(`/quiz/submit`, submission);
-      alert("Quiz submitted successfully!");
-      navigate("/quiz/take");
       await api.post(`/quiz/${quiz.id}/submit`, submission);
       setSubmitted(true);
     } catch (err) {
@@ -102,7 +92,7 @@ function QuizTakingForm() {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading quiz...</p>;
+  if (loading) return null;
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
   if (!quiz) return <p className="text-center mt-10">Quiz not found</p>;
 
@@ -115,16 +105,16 @@ function QuizTakingForm() {
         {submitted ? (
           <div className="text-center py-10">
             <h2 className="text-2xl font-bold text-green-600 mb-4">
-              Quiz Completed!
+              Quiz zakończony!
             </h2>
             <p className="text-gray-600 mb-6">
-              Thank you for submitting your answers.
+              Dziękuje za przesłanie odpowiedzi.
             </p>
             <button
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
               onClick={() => navigate("/student/quiz/take")}
             >
-              Back to Quizzes
+              Powrót do lisy Quizów
             </button>
           </div>
         ) : (
@@ -132,7 +122,7 @@ function QuizTakingForm() {
             <>
               <div className="flex justify-between items-center mb-6 text-sm text-gray-600">
                 <span>
-                  Question {currentIndex + 1} of {quiz.questions.length}
+                  Pytanie {currentIndex + 1} z {quiz.questions.length}
                 </span>
               </div>
               <div>
@@ -202,7 +192,7 @@ function QuizTakingForm() {
                   onClick={() => setCurrentIndex((i) => Math.max(i - 1, 0))}
                   disabled={currentIndex === 0}
                 >
-                  Previous
+                  Powrót
                 </button>
 
                 {currentIndex < quiz.questions.length - 1 ? (
@@ -215,7 +205,7 @@ function QuizTakingForm() {
                     }
                     disabled={!isAnswered(currentQuestion.id)}
                   >
-                    Next
+                    Dalej
                   </button>
                 ) : (
                   <button
@@ -223,7 +213,7 @@ function QuizTakingForm() {
                     onClick={handleSubmit}
                     disabled={!isAnswered(currentQuestion.id)}
                   >
-                    Submit
+                    Wyślij
                   </button>
                 )}
               </div>

@@ -60,8 +60,8 @@ export type StudentSubmissionListItem = {
 export type StudentFeedbackAnswer = {
   questionId: string;
   questionText: string;
-  studentAnswerText: string | null;
-  correctAnswerText: string | null;
+  studentAnswerText: Array<string> | null;
+  correctAnswerText: Array<string> | null;
   answerStatus: AnswerStatus | null;
   teacherComment: string | null;
 };

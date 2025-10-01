@@ -14,14 +14,14 @@ function StudentQuizCard({ quiz }: { quiz: AssignedQuiz }) {
 
       {quiz.completed ? (
         <p className="mt-3 text-green-600 font-medium">
-          You have already taken this quiz
+          Już rozwiązałeś ten quiz
         </p>
       ) : (
         <Link
           to={`/student/quiz/take/${quiz.id}`}
           className="inline-block mt-3 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Start Quiz
+          Rozpocznij Quiz
         </Link>
       )}
     </Card>

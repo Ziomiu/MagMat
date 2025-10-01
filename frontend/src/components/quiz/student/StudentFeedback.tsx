@@ -22,7 +22,6 @@ function StudentFeedback() {
           `/student/${userId}/submission/${submissionId}/feedback`,
         );
         setFeedback(res.data);
-        console.log(res.data);
       } catch (err: any) {
         console.error(err);
         setError("Failed to load feedback");
@@ -81,13 +80,15 @@ function StudentFeedback() {
             <div className="font-semibold mb-1">{ans.questionText}</div>
 
             <div className="mb-1">
-              <span className="font-medium">Your answer:</span>{" "}
-              {ans.studentAnswerText ?? "-"}
+              <span className="font-medium">Twoja odpowiedź:</span> <br />
+              {ans.studentAnswerText && ans.studentAnswerText.length > 0
+                ? ans.studentAnswerText.join(", ")
+                : "-"}
             </div>
-            {ans.correctAnswerText ? (
+            {ans.correctAnswerText && ans.correctAnswerText.length > 0 ? (
               <div className="mb-1">
-                <span className="font-medium">Correct answer:</span>{" "}
-                {ans.correctAnswerText}
+                <span className="font-medium">Poprawna odpowiedź:</span>
+                <br /> {ans.correctAnswerText.join(", ")}
               </div>
             ) : (
               ""
@@ -95,12 +96,12 @@ function StudentFeedback() {
 
             {ans.teacherComment && (
               <div className="text-sm text-gray-700 italic">
-                Teacher: {ans.teacherComment}
+                Komentarz: {ans.teacherComment}
               </div>
             )}
 
             <div className="mt-1 font-medium">
-              Result: {getResultText(ans.answerStatus)}
+              Wynik: {getResultText(ans.answerStatus)}
             </div>
           </div>
         ))}

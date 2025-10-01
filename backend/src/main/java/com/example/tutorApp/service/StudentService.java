@@ -16,8 +16,8 @@ import com.example.tutorApp.utils.QuizUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -33,43 +33,74 @@ public class StudentService {
 
     public List<StudentSubmissionDTO> getStudentSubmissions(UUID studentId) {
         return assignmentRepo.findByStudentId(studentId).stream()
-                .map(a -> new StudentSubmissionDTO(
-                        a.getId(),
-                        a.getQuiz().getId(),
-                        a.getQuiz().getTitle(),
-                        a.getAnswers().stream().allMatch(ans -> ans.getAnswerStatus() != AnswerStatus.PENDING)
-                ))
+                .filter(a -> !a.getAnswers().isEmpty())
+                .map(a -> {
+                    boolean graded = a.getAnswers().stream()
+                            .allMatch(ans -> ans.getAnswerStatus() != AnswerStatus.PENDING);
+
+                    return new StudentSubmissionDTO(
+                            a.getId(),
+                            a.getQuiz().getId(),
+                            a.getQuiz().getTitle(),
+                            graded
+                    );
+                })
                 .toList();
     }
 
     public StudentSubmissionFeedbackDTO getAnswersFeedback(UUID submissionId, UUID studentId) {
-        QuizAssignment assignment = assignmentRepo.findById(submissionId).orElseThrow();
+        QuizAssignment assignment = assignmentRepo.findById(submissionId)
+                .orElseThrow(() -> new NoSuchElementException("Assignment not found"));
 
-        if (!assignment.getStudent().getId().equals(studentId))
+        if (!assignment.getStudent().getId().equals(studentId)) {
             throw new AccessDeniedException("Not your submission");
+        }
 
         List<StudentAnswer> answers = answerRepo.findByAssignmentId(submissionId);
 
-        List<StudentAnswerFeedbackDTO> answerDtos = answers.stream().map(sa -> {
-            String studentAnswerText = sa.getAnswer() != null
-                    ? sa.getAnswer().getText()
-                    : sa.getTextAnswer();
+        // Group student answers by question
+        Map<UUID, List<StudentAnswer>> grouped = answers.stream()
+                .collect(Collectors.groupingBy(sa -> sa.getQuestion().getId()));
 
-            String correctAnswerText = sa.getQuestion().getAnswers().stream()
-                    .filter(QuizAnswer::getIsCorrect)
-                    .map(QuizAnswer::getText)
-                    .findFirst()
-                    .orElse(null);
+        List<StudentAnswerFeedbackDTO> answerDtos = grouped.values().stream()
+                .map(answerGroup -> {
+                    StudentAnswer first = answerGroup.get(0);
 
-            return new StudentAnswerFeedbackDTO(
-                    sa.getQuestion().getId(),
-                    sa.getQuestion().getText(),
-                    studentAnswerText,
-                    correctAnswerText,
-                    sa.getAnswerStatus().name(),
-                    sa.getComment()
-            );
-        }).toList();
+                    List<String> studentAnswerTexts = answerGroup.stream()
+                            .map(sa -> sa.getAnswer() != null
+                                    ? sa.getAnswer().getText()
+                                    : sa.getTextAnswer())
+                            .filter(Objects::nonNull)
+                            .toList();
+
+                    List<String> correctAnswerTexts = first.getQuestion().getAnswers().stream()
+                            .filter(QuizAnswer::getIsCorrect)
+                            .map(QuizAnswer::getText)
+                            .toList();
+
+                    Set<AnswerStatus> statuses = answerGroup.stream()
+                            .map(StudentAnswer::getAnswerStatus)
+                            .collect(Collectors.toSet());
+
+                    AnswerStatus questionStatus;
+                    if (statuses.contains(AnswerStatus.PENDING)) {
+                        questionStatus = AnswerStatus.PENDING;
+                    } else if (statuses.size() == 1) {
+                        questionStatus = statuses.iterator().next();
+                    } else {
+                        questionStatus = AnswerStatus.PARTIAL;
+                    }
+
+                    return new StudentAnswerFeedbackDTO(
+                            first.getQuestion().getId(),
+                            first.getQuestion().getText(),
+                            studentAnswerTexts,
+                            correctAnswerTexts,
+                            questionStatus.name(),
+                            first.getComment()
+                    );
+                })
+                .toList();
 
         return new StudentSubmissionFeedbackDTO(
                 assignment.getId(),
@@ -79,15 +110,16 @@ public class StudentService {
         );
     }
 
+
     public List<StudentResponse> findAllStudents() {
         List<AppUser> users = userRepo.findByUserRoleEquals(UserRole.STUDENT);
         return users.stream().map(user -> new StudentResponse(user.getId(), user.getName(),
                 user.getSurname())).toList();
     }
 
-    public QuizDTO getAssignedQuiz(UUID userId,UUID quizId) {
+    public QuizDTO getAssignedQuiz(UUID userId, UUID quizId) {
         QuizAssignment quizAssignment =
-                assignmentRepo.findByStudentIdAndQuizId(userId,quizId).orElseThrow(AssignmentNotFoundException::new);
+                assignmentRepo.findByStudentIdAndQuizId(userId, quizId).orElseThrow(AssignmentNotFoundException::new);
         if (!quizAssignment.getCompleted()) {
             return QuizUtils.toQuizDTO(quizAssignment.getQuiz());
         } else {
