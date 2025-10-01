@@ -10,7 +10,7 @@ type UserProfile = {
 function MainPage() {
   const { isAuthenticated, userId } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState<boolean>(!!isAuthenticated);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,29 +19,24 @@ function MainPage() {
       return;
     }
 
-    let mounted = true;
     const fetchProfile = async () => {
       try {
         setLoading(true);
         const res = await api.get<UserProfile>(`/user/me/${userId}`);
-        if (!mounted) return;
         setProfile(res.data);
+        setLoading(false);
       } catch (err) {
         console.warn("Nie udało się pobrać profilu użytkownika:", err);
         setError(null);
-      } finally {
-        if (mounted) setLoading(false);
       }
     };
 
     fetchProfile();
-    return () => {
-      mounted = false;
-    };
   }, [isAuthenticated]);
-
+  if (loading) {
+    return null;
+  }
   const firstLine = (() => {
-    if (loading) return "Wczytywanie…";
     if (profile?.name || profile?.surname) {
       return `Witaj, ${profile?.name ?? ""} ${profile?.surname ?? ""}`.trim();
     }

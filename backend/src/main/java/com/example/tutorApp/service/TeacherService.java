@@ -71,7 +71,6 @@ public class TeacherService {
         for (GradedAnswerDTO g : grades) {
             StudentAnswer sa = answerRepo.findById(g.studentAnswerId())
                     .orElseThrow();
-            System.out.println(g.answerStatus());
             sa.setAnswerStatus(AnswerStatus.valueOf(g.answerStatus()));
             sa.setComment(g.comment());
             answerRepo.save(sa);

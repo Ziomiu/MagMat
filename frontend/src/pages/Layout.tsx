@@ -1,34 +1,34 @@
-import React, { type ReactNode, useState } from "react";
-import { PiExam } from "react-icons/pi";
-import { FaHome } from "react-icons/fa";
-import { IoIosMenu } from "react-icons/io";
-import Sidebar from "../components/Sidebar.tsx";
+import React from "react";
 import { Outlet } from "react-router-dom";
+import Sidebar from "../components/Sidebar.tsx";
+import { IoIosMenu } from "react-icons/io";
+import { FaHome } from "react-icons/fa";
+import { PiExam, PiExamFill } from "react-icons/pi";
+import { MdQuiz } from "react-icons/md";
+
 import { useAuth } from "../context/UseAuth.tsx";
 import logo from "../assets/logo.png";
-interface NavItem {
-  name: string;
-  path: string;
-  icon: ReactNode;
-}
 
 const Layout: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const { role } = useAuth();
+  const [isOpen, setIsOpen] = React.useState(true);
+  const { role, loading } = useAuth();
   const commonNav = [{ name: "Home", path: "/", icon: <FaHome size={20} /> }];
 
   const studentNav = [
-    { name: "Quizzes", path: "/quiz", icon: <PiExam size={20} /> },
     {
-      name: "Take Quiz",
+      name: "Rozwiąż Quiz",
       path: "/student/quiz/take",
-      icon: <PiExam size={20} />,
+      icon: <MdQuiz size={20} />,
     },
     {
-      name: "Your submissions",
+      name: "Twoje wyniki",
       path: "/student/submissions",
-      icon: <PiExam size={20} />,
+      icon: <PiExamFill size={20} />,
     },
+  ];
+
+  const teacherNav = [
+    { name: "Quiz Dashboard", path: "/quiz", icon: <PiExam size={20} /> },
     {
       name: "Quiz submissions",
       path: "/teacher/quiz/submissions",
@@ -36,25 +36,14 @@ const Layout: React.FC = () => {
     },
   ];
 
-  const teacherNav = [
-    { name: "Quiz Dashboard", path: "/quiz", icon: <PiExam size={20} /> },
-    { name: "Create Quiz", path: "/quiz/create", icon: <PiExam size={20} /> },
-    {
-      name: "Take Quiz",
-      path: "/student/quiz/take",
-      icon: <PiExam size={20} />,
-    },
-    {
-      name: "Your submissions",
-      path: "/student/submissions",
-      icon: <PiExam size={20} />,
-    },
-  ];
-
-  const navItems: NavItem[] =
+  const navItems =
     role === "TEACHER"
       ? [...commonNav, ...teacherNav]
       : [...commonNav, ...studentNav];
+
+  if (loading) {
+    return;
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -91,4 +80,5 @@ const Layout: React.FC = () => {
     </div>
   );
 };
+
 export default Layout;

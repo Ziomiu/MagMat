@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://magmat-tne3.onrender.com/",
+  baseURL: "http://localhost:8080/",
   withCredentials: true,
 });
 
 export const publicApi = axios.create({
-  baseURL: "https://magmat-tne3.onrender.com/",
+  baseURL: "http://localhost:8080/",
   withCredentials: true,
 });
 

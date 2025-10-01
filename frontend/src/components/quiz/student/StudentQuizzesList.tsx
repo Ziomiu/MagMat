@@ -31,10 +31,10 @@ function StudentQuizzesList() {
 
   return (
     <div className="mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">My Quizzes</h1>
+      <h1 className="text-2xl font-bold mb-6">Przypisane Quizy</h1>
       <EntityList
         items={quizzes}
-        emptyMessage="No quizzes assigned to you yet."
+        emptyMessage="Brak przypisanych quizów"
         renderItem={(quiz) => <StudentQuizCard key={quiz.id} quiz={quiz} />}
       />
     </div>
