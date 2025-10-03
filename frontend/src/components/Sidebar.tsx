@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, navItems, onClose }) => {
           className="w-full flex items-center text-background gap-2 p-2 rounded hover:bg-foreground/90 transition"
         >
           <CiLogout className="size-5" />
-          <span className="font-bold">Logout</span>
+          <span className="font-bold">Wyloguj</span>
         </button>
       </div>
     </aside>

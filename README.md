@@ -19,6 +19,7 @@ Projekt składa się z **backendu** (Java Spring Boot) oraz **frontendu** (React
 - Ocenianie odpowiedzi, zaznaczanie poprawności, dodawanie komentarzy  
 - Zarządzanie studentami
 
+
 ### Dla studenta 
 - Przegląd listy przypisanych quizów  
 - Rozwiązywanie quizów

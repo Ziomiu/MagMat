@@ -45,10 +45,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:8080/user/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await publicApi.post("/user/logout", {});
+      const data: { token: string } = res.data;
+      refresh(data.token);
     } catch (e) {
       console.error("Logout error", e);
     }

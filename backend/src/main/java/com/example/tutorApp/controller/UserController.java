@@ -1,6 +1,8 @@
 package com.example.tutorApp.controller;
 
+import com.example.tutorApp.dto.user.UserDetailsDTO;
 import com.example.tutorApp.entity.AppUser;
+import com.example.tutorApp.entity.UserRole;
 import com.example.tutorApp.request.ForgotPasswordRequest;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -37,6 +40,11 @@ public class UserController {
         this.userService = userService;
         this.tokenService = tokenService;
         this.jwtUtil = jwtUtil;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDetailsDTO>> getUserDetails() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("/login")
@@ -103,5 +111,12 @@ public class UserController {
     @GetMapping("/me/{userId}")
     public ResponseEntity<StudentResponse> getCurrentUser(@PathVariable UUID userId) {
         return ResponseEntity.ok(userService.getUserInfo(userId));
+    }
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<String> updateUserRole(@PathVariable UUID id,
+                                                 @RequestParam UserRole role) {
+        userService.updateUserRole(id, role);
+        return ResponseEntity.ok("");
     }
 }
