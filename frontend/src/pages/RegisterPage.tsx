@@ -79,7 +79,8 @@ function RegisterPage() {
         {isRegistered ? (
           <CardContent className="flex flex-col gap-4 text-center">
             <p>
-              Rejestracja zakończona! Sprawdź swój email aby zweryfikować konto.
+              Rejestracja zakończona! Skontaktuj się z adminstratorem aby
+              aktywować konto.
             </p>
             <button
               className="mb-3 inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all shrink-0 h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 disabled:opacity-50"

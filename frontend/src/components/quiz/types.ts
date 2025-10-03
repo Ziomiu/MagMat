@@ -81,3 +81,11 @@ export type AssignedQuiz = {
   completed: boolean;
 };
 export type AnswerStatus = "CORRECT" | "WRONG" | "PARTIAL" | "PENDING";
+
+export type User = {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  userRole: "ADMIN" | "TEACHER" | "STUDENT" | "NOT_VERIFIED";
+};

@@ -113,16 +113,16 @@ function LoginPage() {
                 Rejestracja
               </button>
             </div>
-            <p className=" text-gray-600">
-              Zapomniałeś{" "}
-              <button
-                type="button"
-                className="text-primary hover:underline hover:cursor-pointer"
-                onClick={() => navigate("/forgot-password")}
-              >
-                hasła?
-              </button>
-            </p>
+            {/*<p className=" text-gray-600">*/}
+            {/*  Zapomniałeś{" "}*/}
+            {/*  <button*/}
+            {/*    type="button"*/}
+            {/*    className="text-primary hover:underline hover:cursor-pointer"*/}
+            {/*    onClick={() => navigate("/forgot-password")}*/}
+            {/*  >*/}
+            {/*    hasła?*/}
+            {/*  </button>*/}
+            {/*</p>*/}
           </CardFooter>
         </form>
       </Card>

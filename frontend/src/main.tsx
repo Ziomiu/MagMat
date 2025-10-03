@@ -19,6 +19,7 @@ import SubmissionDetails from "./components/quiz/teacher/SubmissionDetails.tsx";
 import SubmissionsList from "./components/quiz/student/SubmissionList.tsx";
 import StudentFeedback from "./components/quiz/student/StudentFeedback.tsx";
 import QuizSubmissionsPage from "./components/quiz/teacher/ViewQuizSubmissionsPage.tsx";
+import UserRoleChange from "./components/UserRoleChange.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -44,7 +45,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/quiz"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <QuizManagementPage />
                 </ProtectedRoute>
               }
@@ -52,7 +53,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/quiz/create"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <QuizManagementForm />
                 </ProtectedRoute>
               }
@@ -60,7 +61,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/quiz/:id/edit"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <QuizManagementForm />
                 </ProtectedRoute>
               }
@@ -68,7 +69,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/student/quiz/take"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["STUDENT"]}>
                   <StudentQuizzesList />
                 </ProtectedRoute>
               }
@@ -76,7 +77,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/student/quiz/take/:id"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["STUDENT"]}>
                   <QuizTakingForm />
                 </ProtectedRoute>
               }
@@ -84,7 +85,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/teacher/quiz/:id/submissions"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <SubmissionsPage />
                 </ProtectedRoute>
               }
@@ -92,7 +93,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/teacher/submission/:submissionId"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <SubmissionDetails />
                 </ProtectedRoute>
               }
@@ -100,7 +101,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/student/submissions"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["STUDENT"]}>
                   <SubmissionsList />
                 </ProtectedRoute>
               }
@@ -108,7 +109,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/student/submission/:submissionId/feedback"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["STUDENT"]}>
                   <StudentFeedback />
                 </ProtectedRoute>
               }
@@ -116,8 +117,16 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/teacher/quiz/submissions"
               element={
-                <ProtectedRoute roles={["TEACHER", "STUDENT"]}>
+                <ProtectedRoute roles={["TEACHER"]}>
                   <QuizSubmissionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/roles"
+              element={
+                <ProtectedRoute roles={["TEACHER"]}>
+                  <UserRoleChange />
                 </ProtectedRoute>
               }
             />
