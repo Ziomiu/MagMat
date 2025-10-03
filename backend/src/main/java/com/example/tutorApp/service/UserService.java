@@ -1,5 +1,6 @@
 package com.example.tutorApp.service;
 
+import com.example.tutorApp.dto.user.UserDetailsDTO;
 import com.example.tutorApp.entity.AppUser;
 import com.example.tutorApp.entity.UserRole;
 import com.example.tutorApp.errors.*;
@@ -7,10 +8,12 @@ import com.example.tutorApp.repository.UserRepository;
 import com.example.tutorApp.request.LoginRequest;
 import com.example.tutorApp.request.RegisterRequest;
 import com.example.tutorApp.response.StudentResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,7 +47,7 @@ public class UserService {
         AppUser user = new AppUser(request.name(), request.surname(), request.email(), encodedPassword, UserRole.NOT_VERIFIED);
         AppUser savedUser = userRepository.save(user);
 
-        tokenService.sendEmailVerificationToken(savedUser);
+//        tokenService.sendEmailVerificationToken(savedUser);
     }
 
     public void changeUserPassword(String password, AppUser user) {
@@ -62,6 +65,26 @@ public class UserService {
     public StudentResponse getUserInfo(UUID id) {
         AppUser user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return new StudentResponse(user.getId(), user.getName(), user.getSurname());
+    }
+
+    @Transactional
+    public void updateUserRole(UUID id, UserRole role) {
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        user.setUserRole(role);
+        userRepository.save(user);
+    }
+
+    public List<UserDetailsDTO> getAllUsers() {
+        return userRepository.findAll().stream().map(u -> {
+            return new UserDetailsDTO(
+                    u.getId(),
+                    u.getName(),
+                    u.getSurname(),
+                    u.getEmail(),
+                    u.getUserRole().name()
+            );
+        }).toList();
     }
 
 }

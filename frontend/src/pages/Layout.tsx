@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar.tsx";
 import { IoIosMenu } from "react-icons/io";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUser } from "react-icons/fa";
 import { PiExam, PiExamFill } from "react-icons/pi";
 import { MdQuiz } from "react-icons/md";
 
@@ -34,6 +34,7 @@ const Layout: React.FC = () => {
       path: "/teacher/quiz/submissions",
       icon: <PiExam size={20} />,
     },
+    { name: "User roles", path: "/roles", icon: <FaUser size={20} /> },
   ];
 
   const navItems =

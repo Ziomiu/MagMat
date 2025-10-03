@@ -35,10 +35,18 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
   };
 
   const updateAnswer = (updated: Answer) => {
-    setLocalQuestion((prev) => ({
-      ...prev,
-      answers: prev.answers.map((a) => (a.id === updated.id ? updated : a)),
-    }));
+    setLocalQuestion((prev) => {
+      let newAnswers = prev.answers.map((a) =>
+        a.id === updated.id ? updated : a,
+      );
+
+      if (prev.type === "SINGLE" && updated.correct) {
+        newAnswers = newAnswers.map((a) =>
+          a.id === updated.id ? a : { ...a, correct: false },
+        );
+      }
+      return { ...prev, answers: newAnswers };
+    });
   };
 
   const deleteAnswer = (id: string) => {
