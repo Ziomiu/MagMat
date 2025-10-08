@@ -90,7 +90,6 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
           </select>
         </div>
 
-        {/* MathLive question field */}
         <MathField
           value={localQuestion.text}
           onChange={(latex) =>
