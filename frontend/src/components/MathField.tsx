@@ -6,8 +6,8 @@ interface MathFieldProps {
   onChange?: (latex: string) => void;
   placeholder?: string;
   readOnly?: boolean;
-  className?: string;
   displayMode?: boolean;
+  className?: string;
 }
 
 export const MathField: React.FC<MathFieldProps> = ({
@@ -15,42 +15,44 @@ export const MathField: React.FC<MathFieldProps> = ({
   onChange,
   placeholder,
   readOnly = false,
-  className = "",
   displayMode = false,
+  className = "",
 }) => {
-  const ref = useRef<MathfieldElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mathFieldRef = useRef<MathfieldElement | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-    const field = ref.current;
+    if (!containerRef.current) return;
 
-    field.value = value ?? "";
-    field.readOnly = readOnly;
-    field.smartMode = !displayMode;
-    if (displayMode) {
-      field.style.pointerEvents = "none";
-      field.style.background = "transparent";
-      field.style.border = "none";
+    if (!mathFieldRef.current) {
+      const mf = new MathfieldElement();
+      mf.value = value;
+      mf.readOnly = readOnly;
+      if (displayMode) {
+        mf.style.pointerEvents = "none";
+        mf.style.background = "transparent";
+        mf.style.border = "none";
+      }
+
+      if (placeholder) mf.placeholder = placeholder;
+
+      mf.addEventListener("input", () => {
+        onChange?.(mf.getValue("latex"));
+      });
+
+      containerRef.current.appendChild(mf);
+      mathFieldRef.current = mf;
     }
 
-    const handleInput = () => {
-      if (!onChange) return;
-      onChange(field.getValue("latex"));
-    };
-    field.addEventListener("input", handleInput);
-    return () => field.removeEventListener("input", handleInput);
-  }, [value, onChange, readOnly, displayMode]);
+    mathFieldRef.current.value = value;
+    mathFieldRef.current.readOnly = readOnly;
+  }, [value, readOnly, displayMode, onChange, placeholder]);
 
   return (
-    <math-field
-      ref={ref as any}
-      readOnly={readOnly}
-      placeholder={placeholder}
-      class={className}
-      style={{
-        minHeight: "2.2rem",
-        display: "block",
-      }}
-    ></math-field>
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ minHeight: "2.2rem" }}
+    />
   );
 };
