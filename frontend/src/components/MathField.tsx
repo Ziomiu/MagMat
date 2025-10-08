@@ -28,9 +28,7 @@ export const MathField: React.FC<MathFieldProps> = ({
       const mf = new MathfieldElement();
       mf.value = value;
       mf.readOnly = readOnly;
-      mf.smartMode = false;
-      mf.defaultMode = "text";
-      mf.classList.add(...className.split(" "));
+      mf.smartMode = true;
       mf.mathModeSpace = "\\:";
       if (displayMode) {
         mf.style.pointerEvents = "none";
