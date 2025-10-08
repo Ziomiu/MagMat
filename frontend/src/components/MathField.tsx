@@ -29,6 +29,7 @@ export const MathField: React.FC<MathFieldProps> = ({
       mf.value = value;
       mf.readOnly = readOnly;
       mf.smartMode = false;
+      mf.defaultMode = "text";
       mf.classList.add(...className.split(" "));
       mf.mathModeSpace = "\\:";
       if (displayMode) {
