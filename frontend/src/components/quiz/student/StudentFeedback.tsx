@@ -3,6 +3,7 @@ import { api } from "../../../libs/api";
 import { useParams, useNavigate } from "react-router-dom";
 import type { StudentFeedbackSubmission, AnswerStatus } from "../types";
 import { useAuth } from "../../../context/UseAuth.tsx";
+import { MathField } from "../../MathField";
 
 function StudentFeedback() {
   const { userId } = useAuth();
@@ -77,21 +78,27 @@ function StudentFeedback() {
             key={ans.questionId}
             className={`border p-4 rounded ${getBorderColor(ans.answerStatus)}`}
           >
-            <div className="font-semibold mb-1">{ans.questionText}</div>
+            <div className="font-semibold mb-1">
+              <MathField value={ans.questionText} readOnly displayMode />
+            </div>
 
             <div className="mb-1">
               <span className="font-medium">Twoja odpowiedź:</span> <br />
               {ans.studentAnswerText && ans.studentAnswerText.length > 0
-                ? ans.studentAnswerText.join(", ")
+                ? ans.studentAnswerText.map((txt, i) => (
+                    <MathField key={i} value={txt} readOnly displayMode />
+                  ))
                 : "-"}
             </div>
-            {ans.correctAnswerText && ans.correctAnswerText.length > 0 ? (
+
+            {ans.correctAnswerText && ans.correctAnswerText.length > 0 && (
               <div className="mb-1">
                 <span className="font-medium">Poprawna odpowiedź:</span>
-                <br /> {ans.correctAnswerText.join(", ")}
+                <br />
+                {ans.correctAnswerText.map((txt, i) => (
+                  <MathField key={i} value={txt} readOnly displayMode />
+                ))}
               </div>
-            ) : (
-              ""
             )}
 
             {ans.teacherComment && (
