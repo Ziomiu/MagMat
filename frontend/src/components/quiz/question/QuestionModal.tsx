@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { Question, Answer } from "../types";
 import AnswerList from "../answer/AnswerList";
 import { v4 as uuidv4 } from "uuid";
+import { MathField } from "../../MathField";
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -68,6 +70,7 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
         <h2 className="text-xl font-semibold mb-4">
           {initialQuestion ? "Edit Question" : "Add Question"}
         </h2>
+
         <div className="flex justify-between items-center mb-3">
           <label className="font-medium">Type:</label>
           <select
@@ -86,13 +89,14 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
             <option value="OPEN">Open Answer</option>
           </select>
         </div>
-        <input
-          type="text"
-          placeholder="Question Text"
+
+        {/* MathLive question field */}
+        <MathField
           value={localQuestion.text}
-          onChange={(e) =>
-            setLocalQuestion({ ...localQuestion, text: e.target.value })
+          onChange={(latex) =>
+            setLocalQuestion((prev) => ({ ...prev, text: latex }))
           }
+          placeholder="Type your question..."
           className="border rounded px-3 py-2 w-full mb-4"
         />
 
@@ -113,6 +117,7 @@ function QuestionModal({ open, onClose, onSave, initialQuestion }: Props) {
             )}
           </div>
         )}
+
         <div className="flex justify-end gap-2 mt-6">
           <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">
             Cancel

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../../libs/api.ts";
 import type { Quiz } from "../types.ts";
 import { useAuth } from "../../../context/UseAuth.tsx";
+import { MathField } from "../../MathField";
 
 type SubmissionAnswer = {
   questionId: string;
@@ -125,9 +126,14 @@ function QuizTakingForm() {
                   Pytanie {currentIndex + 1} z {quiz.questions.length}
                 </span>
               </div>
+
               <div>
                 <h2 className="text-lg font-semibold mb-4">
-                  {currentQuestion.text}
+                  <MathField
+                    value={currentQuestion.text}
+                    readOnly
+                    displayMode
+                  />
                 </h2>
 
                 <div className="space-y-3">
@@ -147,7 +153,7 @@ function QuizTakingForm() {
                             handleSingleChoice(currentQuestion.id, a.id)
                           }
                         />
-                        <span>{a.text}</span>
+                        <MathField value={a.text} readOnly displayMode />
                       </label>
                     ))}
 
@@ -168,7 +174,7 @@ function QuizTakingForm() {
                             handleMultipleChoice(currentQuestion.id, a.id)
                           }
                         />
-                        <span>{a.text}</span>
+                        <MathField value={a.text} readOnly displayMode />
                       </label>
                     ))}
 

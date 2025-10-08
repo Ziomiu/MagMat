@@ -1,5 +1,6 @@
 import type { Answer } from "../types.ts";
 import { TiDeleteOutline } from "react-icons/ti";
+import { MathField } from "../../MathField";
 
 type Props = {
   answer: Answer;
@@ -25,13 +26,14 @@ function AnswerItem({
       >
         <TiDeleteOutline />
       </button>
-      <input
-        type="text"
-        placeholder="Answer"
+
+      <MathField
         value={answer.text}
-        onChange={(e) => updateAnswer({ ...answer, text: e.target.value })}
+        onChange={(latex) => updateAnswer({ ...answer, text: latex })}
+        placeholder="Type answer..."
         className="border rounded px-2 py-1 flex-1"
       />
+
       <label className="flex items-center gap-1">
         Correct
         <input
@@ -49,4 +51,5 @@ function AnswerItem({
     </div>
   );
 }
+
 export default AnswerItem;

@@ -6,6 +6,7 @@ import type {
   StudentAnswerDto,
   AnswerStatus,
 } from "../types";
+import { MathField } from "../../MathField";
 
 function SubmissionDetail() {
   const { submissionId } = useParams<{ submissionId: string }>();
@@ -92,19 +93,40 @@ function SubmissionDetail() {
       <div className="space-y-4">
         {localAnswers.map((ans) => (
           <div key={ans.id} className="border p-4 rounded">
-            <div className="font-semibold mb-1">{ans.questionText}</div>
+            <div className="font-semibold mb-1">
+              <MathField value={ans.questionText} readOnly displayMode />
+            </div>
 
             {ans.selectedAnswerText && (
               <div className="mb-2">
                 <div className="text-sm text-gray-600">Selected:</div>
-                <div>{ans.selectedAnswerText}</div>
+                {Array.isArray(ans.selectedAnswerText) ? (
+                  ans.selectedAnswerText.map((txt, i) => (
+                    <MathField
+                      key={i}
+                      value={txt}
+                      readOnly
+                      displayMode
+                      className="ml-2"
+                    />
+                  ))
+                ) : (
+                  <MathField
+                    value={ans.selectedAnswerText}
+                    readOnly
+                    displayMode
+                    className="ml-2"
+                  />
+                )}
               </div>
             )}
 
             {ans.textAnswer && (
               <div className="mb-2">
                 <div className="text-sm text-gray-600">Open answer:</div>
-                <div className="italic">{ans.textAnswer}</div>
+                <div className="italic">
+                  <MathField value={ans.textAnswer} readOnly displayMode />
+                </div>
               </div>
             )}
 
